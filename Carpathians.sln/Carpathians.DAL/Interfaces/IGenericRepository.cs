@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -12,8 +12,7 @@ namespace Carpathians.DAL.Interfaces
         Task<T?> GetByIdAsync(int id);
         Task<T?> GetFirstOrDefaultAsync(Expression<Func<T, bool>> filter, string? includeProperties = null);
         Task AddAsync(T entity);
-        void Update(T entity);
-        void Delete(T entity);
-        Task SaveAsync(); // Метод для збереження змін (Commit)
+        Task UpdateAsync(T entity);
+        Task DeleteAsync(T entity);
     }
 }

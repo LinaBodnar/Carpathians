@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -27,8 +27,6 @@ namespace Carpathians.BLL.Services
             booking.CreatedAt = DateTime.UtcNow;
 
             await _bookingRepository.AddAsync(booking);
-            await _bookingRepository.SaveAsync();
-
             return _mapper.Map<BookingDto>(booking);
         }
 
@@ -50,8 +48,7 @@ namespace Carpathians.BLL.Services
             if (booking == null) return false;
 
             booking.Status = status;
-            _bookingRepository.Update(booking);
-            await _bookingRepository.SaveAsync();
+            await _bookingRepository.UpdateAsync(booking);
             return true;
         }
     }

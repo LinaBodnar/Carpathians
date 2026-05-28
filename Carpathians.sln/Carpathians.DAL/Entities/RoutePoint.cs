@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace Carpathians.DAL.Entities
 {
@@ -12,9 +12,8 @@ namespace Carpathians.DAL.Entities
         public string Description { get; set; } = string.Empty;
         public double Latitude { get; set; }
         public double Longitude { get; set; }
-        public int OrderIndex { get; set; } // Визначає порядок відображення в акордеоні
+        public int OrderIndex { get; set; }
 
-        // Зв'язок: фотографії цієї конкретної точки
         public ICollection<RoutePointPhoto> Photos { get; set; } = new List<RoutePointPhoto>();
     }
 }

@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Carpathians.DAL.Entities;
 
 namespace Carpathians.DAL
@@ -20,35 +20,30 @@ namespace Carpathians.DAL
         {
             base.OnModelCreating(modelBuilder);
 
-            // Точки видаляються разом із маршрутом
             modelBuilder.Entity<RoutePoint>()
                 .HasOne(rp => rp.Route)
                 .WithMany(r => r.RoutePoints)
                 .HasForeignKey(rp => rp.RouteId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Фотографії точок видаляються разом із точкою
             modelBuilder.Entity<RoutePointPhoto>()
                 .HasOne(rpp => rpp.RoutePoint)
                 .WithMany(rp => rp.Photos)
                 .HasForeignKey(rpp => rpp.RoutePointId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Якщо маршрут видалено, фото в галереї просто втрачає прив'язку (стає у "Всі фото")
             modelBuilder.Entity<GalleryPhoto>()
                 .HasOne(gp => gp.Route)
                 .WithMany(r => r.GalleryPhotos)
                 .HasForeignKey(gp => gp.RouteId)
                 .OnDelete(DeleteBehavior.SetNull);
 
-            // Заявки не видаляються каскадно, щоб зберегти фінансову звітність
             modelBuilder.Entity<Booking>()
                 .HasOne(b => b.Route)
                 .WithMany(r => r.Bookings)
                 .HasForeignKey(b => b.RouteId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Якщо користувач видалив профіль, його заявка залишається як гостьова
             modelBuilder.Entity<Booking>()
                 .HasOne(b => b.User)
                 .WithMany(u => u.Bookings)

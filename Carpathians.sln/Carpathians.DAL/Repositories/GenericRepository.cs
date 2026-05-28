@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -23,17 +23,12 @@ namespace Carpathians.DAL.Repositories
             IQueryable<T> query = dbSet;
 
             if (filter != null)
-            {
                 query = query.Where(filter);
-            }
 
-            // Дозволяє підвантажувати пов'язані таблиці (наприклад, Еager loading для точок маршруту)
             if (includeProperties != null)
             {
                 foreach (var includeProp in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-                {
                     query = query.Include(includeProp);
-                }
             }
 
             return await query.ToListAsync();
@@ -47,15 +42,12 @@ namespace Carpathians.DAL.Repositories
         public async Task<T?> GetFirstOrDefaultAsync(Expression<Func<T, bool>> filter, string? includeProperties = null)
         {
             IQueryable<T> query = dbSet;
-
             query = query.Where(filter);
 
             if (includeProperties != null)
             {
                 foreach (var includeProp in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-                {
                     query = query.Include(includeProp);
-                }
             }
 
             return await query.FirstOrDefaultAsync();
@@ -64,20 +56,18 @@ namespace Carpathians.DAL.Repositories
         public async Task AddAsync(T entity)
         {
             await dbSet.AddAsync(entity);
+            await _context.SaveChangesAsync();
         }
 
-        public void Update(T entity)
+        public async Task UpdateAsync(T entity)
         {
             dbSet.Update(entity);
+            await _context.SaveChangesAsync();
         }
 
-        public void Delete(T entity)
+        public async Task DeleteAsync(T entity)
         {
             dbSet.Remove(entity);
-        }
-
-        public async Task SaveAsync()
-        {
             await _context.SaveChangesAsync();
         }
     }

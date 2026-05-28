@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:Carpathians.MAUI.ViewModels"
+             x:Class="Carpathians.MAUI.Views.RoutesPage"
+             Title="Adventure"
+             BackgroundColor="#1B2E2B"
+             Padding="0,0,0,0">
+
+    <ContentPage.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+            <GradientStop Color="#1B2E2B" Offset="0"/>
+            <GradientStop Color="#050a09" Offset="1"/>
+        </LinearGradientBrush>
+    </ContentPage.Background>
+
+    <Grid RowDefinitions="280,*">
+
+        <!-- ROW 0: Hero — ФІКСОВАНИЙ, не скролиться -->
+        <Grid Grid.Row="0">
+            <!-- Фон градієнт замість фото якщо hero.png не завантажується -->
+            <Grid.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="#1B2E2B" Offset="0"/>
+                    <GradientStop Color="#0d1f1b" Offset="1"/>
+                </LinearGradientBrush>
+            </Grid.Background>
+
+            <!-- Фото hero -->
+            <Image Source="hero.png" Aspect="AspectFill"
+                   HorizontalOptions="Fill" VerticalOptions="Fill"/>
+
+            <!-- Темний overlay -->
+            <BoxView HorizontalOptions="Fill" VerticalOptions="Fill">
+                <BoxView.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="#33000000" Offset="0"/>
+                        <GradientStop Color="#99000000" Offset="1"/>
+                    </LinearGradientBrush>
+                </BoxView.Background>
+            </BoxView>
+
+            <!-- Текст по центру — ФІКСОВАНИЙ -->
+            <VerticalStackLayout
+                HorizontalOptions="Center"
+                VerticalOptions="Center"
+                Spacing="8">
+
+                <Label Text="ADVENTURE"
+                       FontFamily="DMSerif"
+                       FontSize="52"
+                       TextColor="White"
+                       HorizontalOptions="Center"
+                       HorizontalTextAlignment="Center"
+                       CharacterSpacing="5"
+                       LineBreakMode="NoWrap"/>
+
+                <Label Text="Let's conquer the peaks together"
+                       FontFamily="DMSerif"
+                       FontSize="16"
+                       TextColor="#EEffffff"
+                       HorizontalOptions="Center"
+                       HorizontalTextAlignment="Center"/>
+
+                <Button Text="ОБРАТИ МАРШРУТ"
+                        FontFamily="DMSerif"
+                        FontSize="16"
+                        TextColor="White"
+                        BackgroundColor="#99000000"
+                        BorderColor="#44ffffff"
+                        BorderWidth="1"
+                        CornerRadius="18"
+                        Padding="20,10"
+                        HorizontalOptions="Center"
+                        Margin="0,8,0,0"/>
+            </VerticalStackLayout>
+        </Grid>
+
+        <!-- ROW 1: Скролований контент -->
+        <RefreshView Grid.Row="1" IsRefreshing="{Binding IsBusy}" Command="{Binding LoadRoutesCommand}" RefreshColor="#4CAF50">
+            <ScrollView>
+                <VerticalStackLayout Spacing="0">
+
+                    <!-- Горизонтальний скрол вкладок маршрутів -->
+                    <ScrollView Orientation="Horizontal"
+                                HorizontalScrollBarVisibility="Never"
+                                Margin="0,8,0,4">
+                        <HorizontalStackLayout Spacing="8" Padding="16,4">
+                            <!-- 8 кнопок маршрутів -->
+                            <Button Text="ВСІ" Style="{StaticResource TabChip}" Command="{Binding SelectRouteTabCommand}" CommandParameter="ALL"/>
+                            <Button Text="ШПИЦІ" Style="{StaticResource TabChip}" Command="{Binding SelectRouteTabCommand}" CommandParameter="SHPITSI"/>
+                            <Button Text="ПІП ІВАН" Style="{StaticResource TabChip}" Command="{Binding SelectRouteTabCommand}" CommandParameter="PIPIVAN"/>
+                            <Button Text="ГОВЕРЛА" Style="{StaticResource TabChip}" Command="{Binding SelectRouteTabCommand}" CommandParameter="HOVERLA"/>
+                            <Button Text="СВИДОВЕЦЬ" Style="{StaticResource TabChip}" Command="{Binding SelectRouteTabCommand}" CommandParameter="SVYDOVETS"/>
+                            <Button Text="ҐОРҐАНИ" Style="{StaticResource TabChip}" Command="{Binding SelectRouteTabCommand}" CommandParameter="GORGANY"/>
+                            <Button Text="КУКУЛ" Style="{StaticResource TabChip}" Command="{Binding SelectRouteTabCommand}" CommandParameter="KUKUL"/>
+                            <Button Text="БРЕБЕНЕСКУЛ" Style="{StaticResource TabChip}" Command="{Binding SelectRouteTabCommand}" CommandParameter="BREBENESKUL"/>
+                            <Button Text="ГУТИН ТОМНАТИК" Style="{StaticResource TabChip}" Command="{Binding SelectRouteTabCommand}" CommandParameter="GUTIN"/>
+                        </HorizontalStackLayout>
+                    </ScrollView>
+
+                    <!-- Список карток маршрутів -->
+                    <CollectionView ItemsSource="{Binding Routes}"
+                                    Margin="0,4,0,80">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Border Style="{StaticResource GlassPanel}" Margin="16,8">
+                                    <Grid RowDefinitions="200,Auto">
+                                        <Grid Grid.Row="0">
+                                            <Image Source="{Binding MapImage}" Aspect="AspectFill" HeightRequest="200"/>
+                                            <BoxView>
+                                                <BoxView.Background>
+                                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                                        <GradientStop Color="Transparent" Offset="0.4"/>
+                                                        <GradientStop Color="#D9000000" Offset="1"/>
+                                                    </LinearGradientBrush>
+                                                </BoxView.Background>
+                                            </BoxView>
+                                            <Label Text="{Binding Title}" FontFamily="DMSerif" FontSize="18" 
+                                                   TextColor="White" VerticalOptions="End" Margin="12,0,12,8"/>
+                                        </Grid>
+                                        <HorizontalStackLayout Grid.Row="1" Spacing="12" Padding="12,8">
+                                            <Label Text="{Binding Difficulty}" FontSize="12" TextColor="{Binding DifficultyColor}" VerticalOptions="Center"/>
+                                            <Label Text="{Binding Length, StringFormat='→ {0}'}" FontSize="12" TextColor="#cccccc" VerticalOptions="Center"/>
+                                            <Label Text="{Binding Duration, StringFormat='⏱ {0}'}" FontSize="12" TextColor="#cccccc" VerticalOptions="Center"/>
+                                            <Button Text="Детальніше →" FontSize="12" Padding="8,4" CornerRadius="8"
+                                                    BackgroundColor="Transparent" TextColor="White"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RoutesViewModel}}, Path=GoToDetailCommand}"
+                                                    CommandParameter="{Binding .}"
+                                                    HorizontalOptions="EndAndExpand"/>
+                                        </HorizontalStackLayout>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                </VerticalStackLayout>
+            </ScrollView>
+        </RefreshView>
+
+    </Grid>
+</ContentPage>

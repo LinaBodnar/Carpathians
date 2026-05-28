@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    <Color x:Key="BgGradientTop">#1B2E2B</Color>
+    <Color x:Key="BgGradientBottom">#050a09</Color>
+    <Color x:Key="AccentGreen">#4CAF50</Color>
+    <Color x:Key="AccentDark">#2e7d32</Color>
+    <Color x:Key="AccentDarkest">#1b5e20</Color>
+    <Color x:Key="TextPrimary">#e0e0e0</Color>
+    <Color x:Key="TextSecondary">#d1d1d1</Color>
+    <Color x:Key="TextMuted">#999999</Color>
+    <Color x:Key="TextNav">#bbbbbb</Color>
+    <Color x:Key="BorderGlass">#14FFFFFF</Color>
+    <Color x:Key="SurfaceGlass">#08FFFFFF</Color>
+    <Color x:Key="OverlayDark">#99000000</Color>
+    <Color x:Key="DifficultyEasy">#4CAF50</Color>
+    <Color x:Key="DifficultyMid">#FFC107</Color>
+    <Color x:Key="DifficultyHard">#F44336</Color>
+    <Color x:Key="StatusWaiting">#FFC107</Color>
+    <Color x:Key="StatusConfirmed">#4CAF50</Color>
+    <Color x:Key="AvatarBg">#2e7d32</Color>
+</ResourceDictionary>

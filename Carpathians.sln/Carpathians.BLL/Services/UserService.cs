@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using AutoMapper;
 using Carpathians.BLL.DTOs;
 using Carpathians.BLL.Interfaces;
@@ -20,21 +22,18 @@ namespace Carpathians.BLL.Services
 
         public async Task<UserDto?> RegisterAsync(string name, string email, string password)
         {
-            // Перевіряємо, чи немає вже користувача з таким email
             var existingUser = await _userRepository.GetFirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
-            if (existingUser != null) return null; // Email зайнятий
+            if (existingUser != null) return null;
 
             var user = new User
             {
                 Name = name,
                 Email = email,
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword(password), // Хешуємо пароль!
-                AvatarUrl = null // Спочатку аватарка порожня (фронт покаже ініціали)
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(password),
+                AvatarUrl = null
             };
 
             await _userRepository.AddAsync(user);
-            await _userRepository.SaveAsync();
-
             return _mapper.Map<UserDto>(user);
         }
 
@@ -43,7 +42,6 @@ namespace Carpathians.BLL.Services
             var user = await _userRepository.GetFirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
             if (user == null) return null;
 
-            // Перевіряємо, чи збігається введений пароль із збереженим хешем
             bool isPasswordValid = BCrypt.Net.BCrypt.Verify(password, user.PasswordHash);
             if (!isPasswordValid) return null;
 

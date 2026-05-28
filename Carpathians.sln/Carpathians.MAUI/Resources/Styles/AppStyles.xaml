@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    <Style x:Key="GlassPanel" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource SurfaceGlass}"/>
+        <Setter Property="StrokeThickness" Value="1"/>
+        <Setter Property="Stroke" Value="{StaticResource BorderGlass}"/>
+        <Setter Property="StrokeShape" Value="RoundRectangle 24"/>
+        <Setter Property="Padding" Value="16"/>
+    </Style>
+    <Style x:Key="GlassDark" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="#B3000000"/>
+        <Setter Property="StrokeThickness" Value="1"/>
+        <Setter Property="Stroke" Value="#1AFFFFFF"/>
+        <Setter Property="StrokeShape" Value="RoundRectangle 20"/>
+        <Setter Property="Padding" Value="16"/>
+    </Style>
+    <Style x:Key="BtnCTA" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="#99000000"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontFamily" Value="DMSerif"/>
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="CornerRadius" Value="18"/>
+        <Setter Property="Padding" Value="12,16"/>
+        <Setter Property="BorderWidth" Value="1"/>
+        <Setter Property="BorderColor" Value="#33FFFFFF"/>
+    </Style>
+    <Style x:Key="BtnGreen" TargetType="Button">
+        <Setter Property="Background">
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                <GradientStop Color="#2e7d32" Offset="0"/>
+                <GradientStop Color="#1b5e20" Offset="1"/>
+            </LinearGradientBrush>
+        </Setter>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontFamily" Value="DMSerif"/>
+        <Setter Property="CornerRadius" Value="20"/>
+        <Setter Property="Padding" Value="8,16"/>
+    </Style>
+    <Style x:Key="TabChip" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="#14FFFFFF"/>
+        <Setter Property="TextColor" Value="#bbbbbb"/>
+        <Setter Property="FontFamily" Value="DMSerif"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="Padding" Value="10,0"/>
+        <Setter Property="HeightRequest" Value="40"/>
+    </Style>
+    <Style TargetType="Entry">
+        <Setter Property="BackgroundColor" Value="#4D000000"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="PlaceholderColor" Value="#999999"/>
+        <Setter Property="FontFamily" Value="sans-serif"/>
+        <Setter Property="FontSize" Value="14"/>
+    </Style>
+</ResourceDictionary>

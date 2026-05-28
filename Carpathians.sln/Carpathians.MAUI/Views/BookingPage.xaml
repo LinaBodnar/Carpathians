@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:Carpathians.MAUI.ViewModels"
+             x:Class="Carpathians.MAUI.Views.BookingPage"
+             Title="Записатись"
+             BackgroundColor="#050a09"
+             Padding="0,0,0,0">
+
+    <ContentPage.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+            <GradientStop Color="#1B2E2B" Offset="0"/>
+            <GradientStop Color="#050a09" Offset="1"/>
+        </LinearGradientBrush>
+    </ContentPage.Background>
+
+    <ScrollView Margin="0,0,0,80">
+        <VerticalStackLayout Padding="20" Spacing="20">
+            <Label Text="ЗАПИСАТИСЬ НА МАРШРУТ" FontFamily="DMSerif" FontSize="24" TextColor="White"/>
+            
+            <Border Style="{StaticResource GlassPanel}" IsVisible="{Binding IsSuccess, Converter={x:StaticResource InvertedBoolConverter}}">
+                <VerticalStackLayout Spacing="16">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Ім'я" TextColor="#bbbbbb" FontSize="12"/>
+                        <Entry Text="{Binding Name}" IsEnabled="{Binding IsLoggedIn, Converter={x:StaticResource InvertedBoolConverter}}"/>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Email" TextColor="#bbbbbb" FontSize="12"/>
+                        <Entry Text="{Binding Email}" Keyboard="Email" IsEnabled="{Binding IsLoggedIn, Converter={x:StaticResource InvertedBoolConverter}}"/>
+                    </VerticalStackLayout>
+                    
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Телефон" TextColor="#bbbbbb" FontSize="12"/>
+                        <Entry Text="{Binding Phone}" Keyboard="Telephone"/>
+                    </VerticalStackLayout>
+                    
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Маршрут" TextColor="#bbbbbb" FontSize="12"/>
+                        <Entry Text="{Binding SelectedRoute}"/>
+                    </VerticalStackLayout>
+
+                    <Button Text="ВІДПРАВИТИ ЗАЯВКУ" Style="{StaticResource BtnGreen}" Command="{Binding SubmitCommand}" Margin="0,10,0,0"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <Border Style="{StaticResource GlassPanel}" BackgroundColor="#1A4CAF50" IsVisible="{Binding IsSuccess}">
+                <VerticalStackLayout Spacing="16" HorizontalOptions="Center" VerticalOptions="Center">
+                    <Label Text="✓" FontSize="48" TextColor="#4CAF50" HorizontalOptions="Center"/>
+                    <Label Text="Заявку успішно відправлено!" TextColor="White" FontSize="18" HorizontalOptions="Center"/>
+                    <Label Text="Наш гід зв'яжеться з вами найближчим часом." TextColor="#bbbbbb" FontSize="14" HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
+                    <Button Text="ГОТОВО" Style="{StaticResource BtnCTA}" Command="{Binding DismissSuccessCommand}"/>
+                </VerticalStackLayout>
+            </Border>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

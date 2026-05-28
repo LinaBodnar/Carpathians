@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:Carpathians.MAUI.ViewModels"
+             x:Class="Carpathians.MAUI.Views.ProfilePage"
+             Title="Профіль"
+             Padding="0,0,0,0">
+
+    <ContentPage.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+            <GradientStop Color="#1B2E2B" Offset="0"/>
+            <GradientStop Color="#050a09" Offset="1"/>
+        </LinearGradientBrush>
+    </ContentPage.Background>
+
+    <ScrollView Padding="0,0,0,80">
+        <VerticalStackLayout Spacing="0">
+
+            <!-- ═══════════════════════════════════════ -->
+            <!-- СТАН: НЕ ЗАЛОГІНЕНИЙ -->
+            <!-- ═══════════════════════════════════════ -->
+            <VerticalStackLayout IsVisible="{Binding IsLoggedIn, Converter={StaticResource InvertedBoolConverter}}"
+                                 Padding="16,20"
+                                 Spacing="16">
+
+                <Label Text="Вхід / Реєстрація"
+                       FontFamily="DMSerif"
+                       FontSize="26"
+                       TextColor="#e0e0e0"/>
+
+                <!-- Таби Вхід / Реєстрація -->
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="0">
+                    <Button Grid.Column="0"
+                            Text="Вхід"
+                            Command="{Binding ToggleTabCommand}"
+                            CommandParameter="login"
+                            BackgroundColor="Transparent"
+                            TextColor="{Binding IsLoginTab, Converter={StaticResource BoolToAccentColorConverter}}"
+                            FontFamily="DMSerif"
+                            FontSize="16"
+                            BorderWidth="0"
+                            BorderColor="Transparent"
+                            CornerRadius="0"
+                            Padding="0,8"/>
+                    <Button Grid.Column="1"
+                            Text="Реєстрація"
+                            Command="{Binding ToggleTabCommand}"
+                            CommandParameter="register"
+                            BackgroundColor="Transparent"
+                            TextColor="{Binding IsLoginTab, Converter={StaticResource InvertedBoolToAccentColorConverter}}"
+                            FontFamily="DMSerif"
+                            FontSize="16"
+                            BorderWidth="0"
+                            BorderColor="Transparent"
+                            CornerRadius="0"
+                            Padding="0,8"/>
+                </Grid>
+
+                <!-- Підкреслення активного табу -->
+                <Grid ColumnDefinitions="*,*" HeightRequest="2" Margin="0,-12,0,0">
+                    <BoxView Grid.Column="0" Color="#4CAF50"
+                             IsVisible="{Binding IsLoginTab}"
+                             HeightRequest="2"/>
+                    <BoxView Grid.Column="1" Color="#4CAF50"
+                             IsVisible="{Binding IsLoginTab, Converter={StaticResource InvertedBoolConverter}}"
+                             HeightRequest="2"/>
+                </Grid>
+
+                <!-- ── ФОРМА ВХОДУ ── -->
+                <Border IsVisible="{Binding IsLoginTab}"
+                        BackgroundColor="#B3000000"
+                        StrokeThickness="1"
+                        Stroke="#1Affffff"
+                        StrokeShape="RoundRectangle 20"
+                        Padding="16">
+                    <VerticalStackLayout Spacing="12">
+
+                        <Label Text="Email" FontSize="13" TextColor="#d1d1d1"/>
+                        <Border BackgroundColor="#4D000000"
+                                StrokeThickness="1"
+                                Stroke="#33ffffff"
+                                StrokeShape="RoundRectangle 8"
+                                Padding="12,4">
+                            <Entry Text="{Binding LoginEmail, Mode=TwoWay}"
+                                   Placeholder="your@email.com"
+                                   PlaceholderColor="#666"
+                                   TextColor="White"
+                                   Keyboard="Email"
+                                   BackgroundColor="Transparent"/>
+                        </Border>
+
+                        <Label Text="Пароль" FontSize="13" TextColor="#d1d1d1" Margin="0,4,0,0"/>
+                        <Border BackgroundColor="#4D000000"
+                                StrokeThickness="1"
+                                Stroke="#33ffffff"
+                                StrokeShape="RoundRectangle 8"
+                                Padding="12,4">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <Entry Grid.Column="0"
+                                       Text="{Binding LoginPassword, Mode=TwoWay}"
+                                       Placeholder="••••••••"
+                                       PlaceholderColor="#666"
+                                       TextColor="White"
+                                       IsPassword="{Binding ShowPassword, Converter={StaticResource InvertedBoolConverter}}"
+                                       BackgroundColor="Transparent"/>
+                                <Button Grid.Column="1"
+                                        Text="👁"
+                                        Command="{Binding TogglePasswordCommand}"
+                                        BackgroundColor="Transparent"
+                                        TextColor="#888"
+                                        FontSize="16"
+                                        Padding="4"
+                                        WidthRequest="36"/>
+                            </Grid>
+                        </Border>
+
+                        <Button Text="Увійти"
+                                Command="{Binding LoginCommand}"
+                                BackgroundColor="#2e7d32"
+                                TextColor="White"
+                                FontFamily="DMSerif"
+                                FontSize="16"
+                                CornerRadius="20"
+                                HeightRequest="48"
+                                Margin="0,8,0,0"/>
+
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- ── ФОРМА РЕЄСТРАЦІЇ ── -->
+                <Border IsVisible="{Binding IsLoginTab, Converter={StaticResource InvertedBoolConverter}}"
+                        BackgroundColor="#B3000000"
+                        StrokeThickness="1"
+                        Stroke="#1Affffff"
+                        StrokeShape="RoundRectangle 20"
+                        Padding="16">
+                    <VerticalStackLayout Spacing="12">
+
+                        <Label Text="Ім'я" FontSize="13" TextColor="#d1d1d1"/>
+                        <Border BackgroundColor="#4D000000"
+                                StrokeThickness="1"
+                                Stroke="#33ffffff"
+                                StrokeShape="RoundRectangle 8"
+                                Padding="12,4">
+                            <Entry Text="{Binding RegName, Mode=TwoWay}"
+                                   Placeholder="Ваше ім'я"
+                                   PlaceholderColor="#666"
+                                   TextColor="White"
+                                   BackgroundColor="Transparent"/>
+                        </Border>
+
+                        <Label Text="Email" FontSize="13" TextColor="#d1d1d1"/>
+                        <Border BackgroundColor="#4D000000"
+                                StrokeThickness="1"
+                                Stroke="#33ffffff"
+                                StrokeShape="RoundRectangle 8"
+                                Padding="12,4">
+                            <Entry Text="{Binding RegEmail, Mode=TwoWay}"
+                                   Placeholder="your@email.com"
+                                   PlaceholderColor="#666"
+                                   TextColor="White"
+                                   Keyboard="Email"
+                                   BackgroundColor="Transparent"/>
+                        </Border>
+
+                        <Label Text="Пароль" FontSize="13" TextColor="#d1d1d1"/>
+                        <Border BackgroundColor="#4D000000"
+                                StrokeThickness="1"
+                                Stroke="#33ffffff"
+                                StrokeShape="RoundRectangle 8"
+                                Padding="12,4">
+                            <Entry Text="{Binding RegPassword, Mode=TwoWay}"
+                                   Placeholder="••••••••"
+                                   PlaceholderColor="#666"
+                                   TextColor="White"
+                                   IsPassword="True"
+                                   BackgroundColor="Transparent"/>
+                        </Border>
+
+                        <Label Text="Підтвердження пароля" FontSize="13" TextColor="#d1d1d1"/>
+                        <Border BackgroundColor="#4D000000"
+                                StrokeThickness="1"
+                                Stroke="#33ffffff"
+                                StrokeShape="RoundRectangle 8"
+                                Padding="12,4">
+                            <Entry Text="{Binding RegConfirmPassword, Mode=TwoWay}"
+                                   Placeholder="••••••••"
+                                   PlaceholderColor="#666"
+                                   TextColor="White"
+                                   IsPassword="True"
+                                   BackgroundColor="Transparent"/>
+                        </Border>
+
+                        <Button Text="Зареєструватися"
+                                Command="{Binding RegisterCommand}"
+                                BackgroundColor="#2e7d32"
+                                TextColor="White"
+                                FontFamily="DMSerif"
+                                FontSize="16"
+                                CornerRadius="20"
+                                HeightRequest="48"
+                                Margin="0,8,0,0"/>
+
+                    </VerticalStackLayout>
+                </Border>
+
+            </VerticalStackLayout>
+
+            <!-- ═══════════════════════════════════════ -->
+            <!-- СТАН: ЗАЛОГІНЕНИЙ -->
+            <!-- ═══════════════════════════════════════ -->
+            <VerticalStackLayout IsVisible="{Binding IsLoggedIn}"
+                                 Padding="16,20"
+                                 Spacing="16">
+
+                <!-- Аватар-блок -->
+                <VerticalStackLayout HorizontalOptions="Center" Spacing="8" Margin="0,0,0,8">
+                    <Border WidthRequest="72"
+                            HeightRequest="72"
+                            StrokeThickness="0"
+                            StrokeShape="RoundRectangle 36"
+                            BackgroundColor="#2e7d32"
+                            HorizontalOptions="Center">
+                        <Label Text="{Binding UserInitials}"
+                               FontFamily="DMSerif"
+                               FontSize="26"
+                               TextColor="White"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+                    </Border>
+                    <Label Text="{Binding UserName}"
+                           FontFamily="DMSerif"
+                           FontSize="22"
+                           TextColor="White"
+                           HorizontalOptions="Center"/>
+                    <Label Text="{Binding UserEmail}"
+                           FontSize="14"
+                           TextColor="#d1d1d1"
+                           HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+
+                <!-- Секція: Редагування профілю -->
+                <Border BackgroundColor="#08ffffff"
+                        StrokeThickness="1"
+                        Stroke="#0fffffff"
+                        StrokeShape="RoundRectangle 20"
+                        Padding="16">
+                    <VerticalStackLayout Spacing="10">
+
+                        <Label Text="Редагування профілю"
+                               FontFamily="DMSerif"
+                               FontSize="18"
+                               TextColor="#e0e0e0"
+                               Margin="0,0,0,4"/>
+
+                        <Label Text="Ім'я" FontSize="13" TextColor="#d1d1d1"/>
+                        <Border BackgroundColor="#4D000000"
+                                StrokeThickness="1"
+                                Stroke="#33ffffff"
+                                StrokeShape="RoundRectangle 8"
+                                Padding="12,4">
+                            <Entry Text="{Binding UserName, Mode=TwoWay}"
+                                   TextColor="White"
+                                   BackgroundColor="Transparent"/>
+                        </Border>
+
+                        <Label Text="Телефон" FontSize="13" TextColor="#d1d1d1"/>
+                        <Border BackgroundColor="#4D000000"
+                                StrokeThickness="1"
+                                Stroke="#33ffffff"
+                                StrokeShape="RoundRectangle 8"
+                                Padding="12,4">
+                            <Entry Text="{Binding UserPhone, Mode=TwoWay}"
+                                   Placeholder="+380XXXXXXXXX"
+                                   PlaceholderColor="#666"
+                                   TextColor="White"
+                                   Keyboard="Telephone"
+                                   BackgroundColor="Transparent"/>
+                        </Border>
+
+                        <Label Text="Email" FontSize="13" TextColor="#d1d1d1"/>
+                        <Border BackgroundColor="#4D000000"
+                                StrokeThickness="1"
+                                Stroke="#33ffffff"
+                                StrokeShape="RoundRectangle 8"
+                                Padding="12,4">
+                            <Entry Text="{Binding UserEmail, Mode=TwoWay}"
+                                   TextColor="White"
+                                   Keyboard="Email"
+                                   BackgroundColor="Transparent"/>
+                        </Border>
+
+                        <Label Text="Новий пароль (необов'язково)"
+                               FontSize="13" TextColor="#d1d1d1"/>
+                        <Border BackgroundColor="#4D000000"
+                                StrokeThickness="1"
+                                Stroke="#33ffffff"
+                                StrokeShape="RoundRectangle 8"
+                                Padding="12,4">
+                            <Entry Placeholder="••••••••"
+                                   PlaceholderColor="#666"
+                                   TextColor="White"
+                                   IsPassword="True"
+                                   BackgroundColor="Transparent"/>
+                        </Border>
+
+                        <Button Text="Зберегти зміни"
+                                Command="{Binding SaveProfileCommand}"
+                                BackgroundColor="#2e7d32"
+                                TextColor="White"
+                                FontFamily="DMSerif"
+                                FontSize="15"
+                                CornerRadius="20"
+                                HeightRequest="44"
+                                Margin="0,8,0,0"/>
+
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Секція: Мої заявки -->
+                <Border BackgroundColor="#08ffffff"
+                        StrokeThickness="1"
+                        Stroke="#0fffffff"
+                        StrokeShape="RoundRectangle 20"
+                        Padding="16">
+                    <VerticalStackLayout Spacing="8">
+
+                        <Label Text="Мої заявки"
+                               FontFamily="DMSerif"
+                               FontSize="18"
+                               TextColor="#e0e0e0"
+                               Margin="0,0,0,4"/>
+
+                        <CollectionView ItemsSource="{Binding MyBookings}">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BackgroundColor="#0Dffffff"
+                                            StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 10"
+                                            Padding="12,10"
+                                            Margin="0,4">
+                                        <Grid ColumnDefinitions="*,Auto">
+                                            <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                                <Label Text="{Binding RouteName}"
+                                                       FontFamily="DMSerif"
+                                                       FontSize="15"
+                                                       TextColor="White"/>
+                                                <Label FontSize="12"
+                                                       TextColor="#999">
+                                                    <Label.FormattedText>
+                                                        <FormattedString>
+                                                            <Span Text="{Binding CreatedAt, StringFormat='{0:dd MMM yyyy}'}"/>
+                                                            <Span Text=" · "/>
+                                                            <Span Text="{Binding PeopleCount}"/>
+                                                            <Span Text=" особи"/>
+                                                        </FormattedString>
+                                                    </Label.FormattedText>
+                                                </Label>
+                                            </VerticalStackLayout>
+                                            <Border Grid.Column="1"
+                                                    BackgroundColor="#224CAF50"
+                                                    StrokeThickness="1"
+                                                    Stroke="#4CAF50"
+                                                    StrokeShape="RoundRectangle 8"
+                                                    Padding="8,4"
+                                                    VerticalOptions="Center">
+                                                <Label Text="{Binding Status}"
+                                                       FontSize="11"
+                                                       TextColor="#4CAF50"/>
+                                            </Border>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                            <CollectionView.EmptyView>
+                                <Label Text="Ви ще не записувались у походи"
+                                       FontSize="14"
+                                       TextColor="#666"
+                                       HorizontalOptions="Center"
+                                       Margin="0,12"/>
+                            </CollectionView.EmptyView>
+                        </CollectionView>
+
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Кнопка Вийти -->
+                <Button Text="Вийти"
+                        Command="{Binding LogoutCommand}"
+                        BackgroundColor="Transparent"
+                        TextColor="#d1d1d1"
+                        BorderColor="#33ffffff"
+                        BorderWidth="1"
+                        FontFamily="DMSerif"
+                        FontSize="15"
+                        CornerRadius="20"
+                        HeightRequest="44"
+                        Margin="0,8,0,16"/>
+
+            </VerticalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:Carpathians.MAUI.ViewModels"
+             x:Class="Carpathians.MAUI.Views.GalleryPage"
+             Title="Галерея"
+             Padding="0,0,0,0">
+
+    <ContentPage.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+            <GradientStop Color="#1B2E2B" Offset="0"/>
+            <GradientStop Color="#050a09" Offset="1"/>
+        </LinearGradientBrush>
+    </ContentPage.Background>
+
+    <Grid RowDefinitions="Auto,Auto,*">
+
+        <!-- Заголовок -->
+        <Label Grid.Row="0"
+               Text="Галерея"
+               FontFamily="DMSerif"
+               FontSize="28"
+               TextColor="#e0e0e0"
+               Margin="16,14,16,4"/>
+
+        <!-- Фільтр -->
+        <ScrollView Grid.Row="1"
+                    Orientation="Horizontal"
+                    HorizontalScrollBarVisibility="Never"
+                    Margin="0,0,0,4">
+            <HorizontalStackLayout Spacing="6" Padding="16,4">
+
+                <Button Text="Всі"
+                        Command="{Binding FilterCommand}"
+                        CommandParameter="Всі"
+                        BackgroundColor="#4CAF50"
+                        TextColor="White"
+                        FontFamily="DMSerif"
+                        FontSize="12"
+                        CornerRadius="10"
+                        Padding="10,6"
+                        HeightRequest="32"/>
+
+                <Button Text="Шпиці"
+                        Command="{Binding FilterCommand}"
+                        CommandParameter="SHPITSI"
+                        BackgroundColor="#22ffffff"
+                        TextColor="#bbbbbb"
+                        FontFamily="DMSerif"
+                        FontSize="12"
+                        CornerRadius="10"
+                        Padding="10,6"
+                        HeightRequest="32"/>
+
+                <Button Text="Піп Іван"
+                        Command="{Binding FilterCommand}"
+                        CommandParameter="PIPIVAN"
+                        BackgroundColor="#22ffffff"
+                        TextColor="#bbbbbb"
+                        FontFamily="DMSerif"
+                        FontSize="12"
+                        CornerRadius="10"
+                        Padding="10,6"
+                        HeightRequest="32"/>
+
+                <Button Text="Говерла"
+                        Command="{Binding FilterCommand}"
+                        CommandParameter="HOVERLA"
+                        BackgroundColor="#22ffffff"
+                        TextColor="#bbbbbb"
+                        FontFamily="DMSerif"
+                        FontSize="12"
+                        CornerRadius="10"
+                        Padding="10,6"
+                        HeightRequest="32"/>
+
+                <Button Text="Свидовець"
+                        Command="{Binding FilterCommand}"
+                        CommandParameter="SVYDOVETS"
+                        BackgroundColor="#22ffffff"
+                        TextColor="#bbbbbb"
+                        FontFamily="DMSerif"
+                        FontSize="12"
+                        CornerRadius="10"
+                        Padding="10,6"
+                        HeightRequest="32"/>
+
+                <Button Text="Ґорґани"
+                        Command="{Binding FilterCommand}"
+                        CommandParameter="GORGANY"
+                        BackgroundColor="#22ffffff"
+                        TextColor="#bbbbbb"
+                        FontFamily="DMSerif"
+                        FontSize="12"
+                        CornerRadius="10"
+                        Padding="10,6"
+                        HeightRequest="32"/>
+
+                <Button Text="Кукул"
+                        Command="{Binding FilterCommand}"
+                        CommandParameter="KUKUL"
+                        BackgroundColor="#22ffffff"
+                        TextColor="#bbbbbb"
+                        FontFamily="DMSerif"
+                        FontSize="12"
+                        CornerRadius="10"
+                        Padding="10,6"
+                        HeightRequest="32"/>
+
+                <Button Text="Бребенескул"
+                        Command="{Binding FilterCommand}"
+                        CommandParameter="BREBENESKUL"
+                        BackgroundColor="#22ffffff"
+                        TextColor="#bbbbbb"
+                        FontFamily="DMSerif"
+                        FontSize="12"
+                        CornerRadius="10"
+                        Padding="10,6"
+                        HeightRequest="32"/>
+
+                <Button Text="Гутин"
+                        Command="{Binding FilterCommand}"
+                        CommandParameter="GUTIN"
+                        BackgroundColor="#22ffffff"
+                        TextColor="#bbbbbb"
+                        FontFamily="DMSerif"
+                        FontSize="12"
+                        CornerRadius="10"
+                        Padding="10,6"
+                        HeightRequest="32"/>
+
+            </HorizontalStackLayout>
+        </ScrollView>
+
+        <!-- Сітка фото -->
+        <CollectionView Grid.Row="2"
+                        ItemsSource="{Binding FilteredPhotos}"
+                        Margin="8,0,8,80">
+
+            <CollectionView.ItemsLayout>
+                <GridItemsLayout Orientation="Vertical"
+                                 Span="2"
+                                 HorizontalItemSpacing="8"
+                                 VerticalItemSpacing="8"/>
+            </CollectionView.ItemsLayout>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid HeightRequest="160" Margin="0">
+                        <Border StrokeThickness="0"
+                                StrokeShape="RoundRectangle 12">
+                            <Image Source="{Binding FileName}"
+                                   Aspect="AspectFill"
+                                   HeightRequest="160"/>
+                        </Border>
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:GalleryViewModel}}, Path=OpenFullscreenCommand}"
+                                CommandParameter="{Binding .}"/>
+                        </Grid.GestureRecognizers>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+            <CollectionView.EmptyView>
+                <VerticalStackLayout HorizontalOptions="Center"
+                                     VerticalOptions="Center"
+                                     Spacing="12"
+                                     Margin="0,40">
+                    <Label Text="📷" FontSize="48" HorizontalOptions="Center"/>
+                    <Label Text="Фото не знайдено"
+                           FontFamily="DMSerif"
+                           FontSize="18"
+                           TextColor="#999"
+                           HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
+
+        </CollectionView>
+
+    </Grid>
+</ContentPage>
