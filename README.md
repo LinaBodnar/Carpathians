@@ -1,41 +1,45 @@
-This is a Kotlin Multiplatform project targeting Android, Web, Desktop (JVM).
+# Carpathians
 
-* [/shared](./shared/src) is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-  - [commonMain](./shared/src/commonMain/kotlin) is for code that’s common for all targets.
-  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-    the [iosMain](./shared/src/iosMain/kotlin) folder would be the right place for such calls.
-    Similarly, if you want to edit the Desktop (JVM) specific part, the [jvmMain](./shared/src/jvmMain/kotlin)
-    folder is the appropriate location.
+Kotlin Multiplatform (Compose Multiplatform) клієнт для туристичних походів Карпатами.
+Цілі: **Android**, **Desktop (JVM)**, **Web (Wasm / JS)**.
 
-### Running the apps
+## Лабораторна робота №4
 
-Use the run configurations provided by the run widget in your IDE's toolbar. You can also use these commands and options:
+| Завдання | Де реалізовано |
+|---|---|
+| 1. Новий KMP проєкт | `androidApp`, `desktopApp`, `webApp`, `shared` |
+| 2. Дизайн додатка | прототип у [`project/`](./project) (HTML/CSS/JS) — з нього взято палітру, шрифти, компоненти |
+| 3. Кастомна тема (кольори, шрифти) | [`shared/.../theme`](./shared/src/commonMain/kotlin/com/bodnar/carpathians/theme) — `CarpathiansTheme`, `Color.kt`, `Type.kt`, `Shape.kt`; шрифти в `composeResources/font` |
+| 4. Kermit + multiplatform-settings | [`logging/AppLogger.kt`](./shared/src/commonMain/kotlin/com/bodnar/carpathians/logging/AppLogger.kt), [`settings/AppSettings.kt`](./shared/src/commonMain/kotlin/com/bodnar/carpathians/settings/AppSettings.kt) |
+| 5. Екран знайомства з Pager (5 слайдів) | [`ui/onboarding`](./shared/src/commonMain/kotlin/com/bodnar/carpathians/ui/onboarding) — `HorizontalPager` |
+| 6. Локалізація UA / EN | `composeResources/values` (EN), `composeResources/values-uk` (UA), перемикач мови [`locale/`](./shared/src/commonMain/kotlin/com/bodnar/carpathians/locale) |
 
-- Android app: `./gradlew :androidApp:assembleDebug`
-- Desktop app:
-  - Hot reload: `./gradlew :desktopApp:hotRun --auto`
-  - Standard run: `./gradlew :desktopApp:run`
-- Web app:
-  - Wasm target (faster, modern browsers): `./gradlew :webApp:wasmJsBrowserDevelopmentRun`
-  - JS target (slower, supports older browsers): `./gradlew :webApp:jsBrowserDevelopmentRun`
+### Тема
+* Кольори з `project/style.css`: зелений primary `#4CAF50` / `#2E7D32`, темний «гірський» градієнт `#1B2E2B → #050A09`, напівпрозорі «скляні» поверхні.
+* Шрифти:
+  * **DM Serif Text** — фірмовий шрифт дизайну (логотип, «ADVENTURE»);
+  * **Playfair Display** — заголовки (DM Serif Text не має кирилиці, тому для українського тексту використано близький serif);
+  * **Arimo** — основний текст (метрично сумісний з Arial з дизайну).
+* Компоненти: `RouteButton` (.route-button), `GradientButton` (.btn-login-custom), `GlassChip`, `PagerIndicator`, `BrandLogo`.
 
-### Running tests
+### Налаштування (multiplatform-settings)
+`AppSettings` зберігає: чи пройдено онбординг, останню сторінку онбордингу, обрану мову, кількість запусків.
+Сховище: SharedPreferences (Android), `java.util.prefs` (Desktop), `localStorage` (Web).
 
-Use the run button in your IDE's editor gutter, or run tests using Gradle tasks:
+### Логування (Kermit)
+Логи запуску, навігації, перегортання слайдів, зміни мови та налаштувань. Тег `Carpathians`.
 
-- Android tests: `./gradlew :shared:testAndroidHostTest`
-- Desktop tests: `./gradlew :shared:jvmTest`
-- Web tests:
-  - Wasm target: `./gradlew :shared:wasmJsTest`
-  - JS target: `./gradlew :shared:jsTest`
+### Онбординг
+5 слайдів, що повторюють секції дизайну: Hero → Маршрути → Галерея → Спорядження → Запис у похід.
+Паралакс фото, анімований індикатор, кнопки «Пропустити» / «Далі» / «Почати». Після завершення відкривається головний екран (hero-секція),
+з якого онбординг можна переглянути знову.
 
----
+## Запуск
 
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html),
-[Compose Multiplatform](https://kotlinlang.org/compose-multiplatform/),
-[Kotlin/Wasm](https://kotl.in/wasm/)…
+- Android: `./gradlew :androidApp:assembleDebug`
+- Desktop: `./gradlew :desktopApp:run`
+- Web (Wasm): `./gradlew :webApp:wasmJsBrowserDevelopmentRun`
+- Web (JS): `./gradlew :webApp:jsBrowserDevelopmentRun`
+- Тести: `./gradlew :shared:jvmTest`
 
-We would appreciate your feedback on Compose/Web and Kotlin/Wasm in the public Slack channel [#compose-web](https://slack-chats.kotlinlang.org/c/compose-web).
-If you face any issues, please report them on [YouTrack](https://youtrack.jetbrains.com/newIssue?project=CMP).
+Шрифти розповсюджуються за ліцензією SIL OFL 1.1 — див. [`licenses/`](./licenses).
