@@ -4,4 +4,5 @@ html, body {
     margin: 0;
     padding: 0;
     overflow: hidden;
+    background: linear-gradient(to bottom, #1B2E2B 0%, #050a09 100%);
 }

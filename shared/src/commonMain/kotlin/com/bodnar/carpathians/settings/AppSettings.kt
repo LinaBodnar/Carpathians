@@ -21,6 +21,11 @@ class AppSettings(
             log.d { "onboardingCompleted = $value" }
         }
 
+    /** Остання переглянута сторінка онбордингу (щоб продовжити з того ж місця). */
+    var onboardingPage: Int
+        get() = settings.getInt(KEY_ONBOARDING_PAGE, 0)
+        set(value) = settings.putInt(KEY_ONBOARDING_PAGE, value)
+
     /** Кількість запусків додатка. */
     val launchCount: Int
         get() = settings.getInt(KEY_LAUNCH_COUNT, 0)
@@ -39,6 +44,7 @@ class AppSettings(
 
     companion object {
         const val KEY_ONBOARDING_COMPLETED = "onboarding_completed"
+        const val KEY_ONBOARDING_PAGE = "onboarding_page"
         const val KEY_LAUNCH_COUNT = "launch_count"
     }
 }

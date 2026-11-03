@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Carpathians</string>
+    <string name="hero_subtitle">Let’s conquer the peaks together</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_skip">Skip</string>
+    <string name="onboarding_next">Next</string>
+    <string name="onboarding_start">Get started</string>
+    <string name="onboarding_step">%1$d / %2$d</string>
+
+    <string name="onboarding_welcome_title">Welcome to the Carpathians</string>
+    <string name="onboarding_welcome_text">Hiking trips across the Ukrainian Carpathians: Hoverla, Pip Ivan, Shpytsi and many more peaks are waiting for you.</string>
+
+    <string name="onboarding_routes_title">Choose your route</string>
+    <string name="onboarding_routes_text">Eight routes with difficulty, distance and duration for each one, plus an interactive map and photos of every key point.</string>
+
+    <string name="onboarding_gallery_title">Moments to remember</string>
+    <string name="onboarding_gallery_text">Mountain lakes, rocky peaks and blooming meadows — moments that stay between the clouds and the heart.</string>
+
+    <string name="onboarding_gear_title">Get ready for the hike</string>
+    <string name="onboarding_gear_text">We’ll remind you what to take with you so nothing spoils the journey.</string>
+
+    <string name="onboarding_join_title">Join a hike</string>
+    <string name="onboarding_join_text">Leave a request and we’ll contact you to discuss the details. The mountains are calling!</string>
+
+    <!-- Routes -->
+    <string name="route_shpitsi">Shpytsi</string>
+    <string name="route_pip_ivan">Pip Ivan</string>
+    <string name="route_hoverla">Hoverla</string>
+    <string name="route_svydovets">Svydovets</string>
+    <string name="route_gorgany">Gorgany</string>
+    <string name="route_kukul">Kukul</string>
+    <string name="route_brebeneskul">Brebeneskul</string>
+    <string name="route_gutin">Hutyn Tomnatyk</string>
+
+    <!-- Gear -->
+    <string name="gear_backpack">Backpack 20–30 L</string>
+    <string name="gear_water">Water 1.5–2 L</string>
+    <string name="gear_raincoat">Raincoat</string>
+    <string name="gear_shoes">Trekking shoes</string>
+    <string name="gear_first_aid">First aid kit</string>
+    <string name="gear_snack">Nuts &amp; chocolate</string>
+
+    <!-- Home -->
+    <string name="home_sign_in">Sign in</string>
+    <string name="home_choose_route">CHOOSE A ROUTE</string>
+    <string name="home_show_onboarding">Show the introduction again</string>
+    <string name="home_routes_soon">The route list is coming in the next version</string>
+    <string name="home_quote">“We don’t just go to the mountains — we go to ourselves.”</string>
+</resources>
