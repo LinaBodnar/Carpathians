@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Carpathians</string>
+    <string name="hero_subtitle">Підкорюймо вершини разом</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_skip">Пропустити</string>
+    <string name="onboarding_next">Далі</string>
+    <string name="onboarding_start">Почати</string>
+    <string name="onboarding_step">%1$d / %2$d</string>
+
+    <string name="onboarding_welcome_title">Ласкаво просимо в Карпати</string>
+    <string name="onboarding_welcome_text">Туристичні походи Українськими Карпатами: Говерла, Піп Іван, Шпиці та ще багато вершин чекають на вас.</string>
+
+    <string name="onboarding_routes_title">Оберіть свій маршрут</string>
+    <string name="onboarding_routes_text">Вісім маршрутів зі складністю, довжиною та тривалістю, інтерактивною картою та фото кожної ключової точки.</string>
+
+    <string name="onboarding_gallery_title">Галерея вражень</string>
+    <string name="onboarding_gallery_text">Гірські озера, скелясті вершини та квітучі полонини — моменти, що залишаються між хмарами та серцем.</string>
+
+    <string name="onboarding_gear_title">Що взяти з собою?</string>
+    <string name="onboarding_gear_text">Ми нагадаємо, що покласти в рюкзак, щоб ніщо не зіпсувало подорож.</string>
+
+    <string name="onboarding_join_title">Запис у похід</string>
+    <string name="onboarding_join_text">Залиште заявку, і ми звʼяжемося з вами для обговорення деталей. Гори кличуть!</string>
+
+    <!-- Routes -->
+    <string name="route_shpitsi">Шпиці</string>
+    <string name="route_pip_ivan">Піп Іван</string>
+    <string name="route_hoverla">Говерла</string>
+    <string name="route_svydovets">Свидовець</string>
+    <string name="route_gorgany">Ґорґани</string>
+    <string name="route_kukul">Кукул</string>
+    <string name="route_brebeneskul">Бребенескул</string>
+    <string name="route_gutin">Гутин Томнатик</string>
+
+    <!-- Gear -->
+    <string name="gear_backpack">Рюкзак 20–30 л</string>
+    <string name="gear_water">Вода 1,5–2 л</string>
+    <string name="gear_raincoat">Дощовик</string>
+    <string name="gear_shoes">Трекінгове взуття</string>
+    <string name="gear_first_aid">Аптечка</string>
+    <string name="gear_snack">Горіхи й шоколад</string>
+
+    <!-- Home -->
+    <string name="home_sign_in">Вхід</string>
+    <string name="home_choose_route">ОБРАТИ МАРШРУТ</string>
+    <string name="home_show_onboarding">Переглянути знайомство ще раз</string>
+    <string name="home_routes_soon">Список маршрутів зʼявиться в наступній версії</string>
+    <string name="home_quote">“Ми не просто ходимо в гори — ми йдемо до себе.”</string>
+
+    <!-- Language -->
+    <string name="language_switch_description">Мова додатка</string>
+</resources>

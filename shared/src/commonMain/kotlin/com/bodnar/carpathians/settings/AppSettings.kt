@@ -26,6 +26,14 @@ class AppSettings(
         get() = settings.getInt(KEY_ONBOARDING_PAGE, 0)
         set(value) = settings.putInt(KEY_ONBOARDING_PAGE, value)
 
+    /** Мова, обрана користувачем ("uk" / "en"); null — мова системи. */
+    var appLanguage: String?
+        get() = settings.getStringOrNull(KEY_APP_LANGUAGE)
+        set(value) {
+            if (value == null) settings.remove(KEY_APP_LANGUAGE) else settings.putString(KEY_APP_LANGUAGE, value)
+            log.d { "appLanguage = $value" }
+        }
+
     /** Кількість запусків додатка. */
     val launchCount: Int
         get() = settings.getInt(KEY_LAUNCH_COUNT, 0)
@@ -46,5 +54,6 @@ class AppSettings(
         const val KEY_ONBOARDING_COMPLETED = "onboarding_completed"
         const val KEY_ONBOARDING_PAGE = "onboarding_page"
         const val KEY_LAUNCH_COUNT = "launch_count"
+        const val KEY_APP_LANGUAGE = "app_language"
     }
 }

@@ -48,4 +48,7 @@
     <string name="home_show_onboarding">Show the introduction again</string>
     <string name="home_routes_soon">The route list is coming in the next version</string>
     <string name="home_quote">“We don’t just go to the mountains — we go to ourselves.”</string>
+
+    <!-- Language -->
+    <string name="language_switch_description">App language</string>
 </resources>
