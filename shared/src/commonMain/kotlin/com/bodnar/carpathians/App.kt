@@ -15,6 +15,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import carpathians.shared.generated.resources.Res
 import carpathians.shared.generated.resources.compose_multiplatform
+import com.bodnar.carpathians.logging.AppLogger
+import com.bodnar.carpathians.settings.AppSettings
 import com.bodnar.carpathians.theme.CarpathiansBackground
 import com.bodnar.carpathians.theme.CarpathiansTheme
 import org.jetbrains.compose.resources.painterResource
@@ -22,6 +24,12 @@ import org.jetbrains.compose.resources.painterResource
 @Composable
 @Preview
 fun App() {
+    val settings = remember {
+        AppLogger.init()
+        AppSettings()
+    }
+    val launchCount = remember { settings.registerLaunch() }
+
     CarpathiansTheme {
         var showContent by remember { mutableStateOf(false) }
         CarpathiansBackground {
@@ -32,7 +40,11 @@ fun App() {
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text("Carpathians", style = MaterialTheme.typography.displayMedium)
-                Button(onClick = { showContent = !showContent }) {
+                Text("Launch #$launchCount", style = MaterialTheme.typography.bodyMedium)
+                Button(onClick = {
+                    showContent = !showContent
+                    AppLogger.withTag("App").d { "showContent = $showContent" }
+                }) {
                     Text("Click me!")
                 }
                 AnimatedVisibility(showContent) {

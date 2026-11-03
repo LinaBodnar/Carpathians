@@ -1,0 +1,44 @@
+package com.bodnar.carpathians.settings
+
+import com.bodnar.carpathians.logging.AppLogger
+import com.russhwolf.settings.Settings
+
+/**
+ * Налаштування користувача на основі multiplatform-settings.
+ * Settings() з модуля no-arg використовує SharedPreferences (Android),
+ * java.util.prefs.Preferences (Desktop) та localStorage (Web).
+ */
+class AppSettings(
+    private val settings: Settings = Settings(),
+) {
+    private val log = AppLogger.withTag("AppSettings")
+
+    /** Чи пройшов користувач екран знайомства з додатком. */
+    var isOnboardingCompleted: Boolean
+        get() = settings.getBoolean(KEY_ONBOARDING_COMPLETED, false)
+        set(value) {
+            settings.putBoolean(KEY_ONBOARDING_COMPLETED, value)
+            log.d { "onboardingCompleted = $value" }
+        }
+
+    /** Кількість запусків додатка. */
+    val launchCount: Int
+        get() = settings.getInt(KEY_LAUNCH_COUNT, 0)
+
+    fun registerLaunch(): Int {
+        val count = launchCount + 1
+        settings.putInt(KEY_LAUNCH_COUNT, count)
+        log.i { "App launch #$count" }
+        return count
+    }
+
+    fun clear() {
+        settings.clear()
+        log.w { "All settings were cleared" }
+    }
+
+    companion object {
+        const val KEY_ONBOARDING_COMPLETED = "onboarding_completed"
+        const val KEY_LAUNCH_COUNT = "launch_count"
+    }
+}

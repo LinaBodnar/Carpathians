@@ -52,9 +52,16 @@ kotlin {
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
+
+            // Логування
+            implementation(libs.kermit)
+            // Налаштування користувача (SharedPreferences / Preferences / localStorage)
+            implementation(libs.multiplatform.settings)
+            implementation(libs.multiplatform.settings.noArg)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
+            implementation(libs.multiplatform.settings.test)
         }
         jsMain.dependencies {
             implementation(libs.wrappers.browser)
