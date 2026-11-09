@@ -17,8 +17,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.snapshotFlow
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.bodnar.carpathians.core.mvi.CollectEffects
+import com.bodnar.carpathians.ui.components.AppLanguageSwitcher
+import org.koin.compose.viewmodel.koinViewModel
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -26,7 +30,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import com.bodnar.carpathians.logging.AppLogger
 import com.bodnar.carpathians.theme.CarpathiansColors
 import com.bodnar.carpathians.ui.components.AdventureTitle
 import com.bodnar.carpathians.ui.components.BrandLogo
@@ -40,41 +43,58 @@ import carpathians.shared.generated.resources.onboarding_next
 import carpathians.shared.generated.resources.onboarding_skip
 import carpathians.shared.generated.resources.onboarding_start
 import carpathians.shared.generated.resources.onboarding_step
-import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import kotlin.math.absoluteValue
 
-private val log = AppLogger.withTag("Onboarding")
+/**
+ * Точка входу екрана для навігації: бере ViewModel з Koin,
+ * передає стан у UI та обробляє одноразові події.
+ */
+@Composable
+fun OnboardingRoute(
+    onNavigateToAuth: () -> Unit,
+    viewModel: OnboardingViewModel = koinViewModel(),
+) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    val pagerState = rememberPagerState(
+        initialPage = state.currentPage,
+        pageCount = { state.pageCount },
+    )
+
+    CollectEffects(viewModel.effects) { effect ->
+        when (effect) {
+            is OnboardingEffect.ScrollToPage -> pagerState.animateScrollToPage(effect.page)
+            OnboardingEffect.NavigateToAuth -> onNavigateToAuth()
+        }
+    }
+
+    OnboardingScreen(
+        state = state,
+        pagerState = pagerState,
+        onIntent = viewModel::onIntent,
+        topBarActions = { AppLanguageSwitcher(Modifier.padding(end = 8.dp)) },
+    )
+}
 
 /**
  * Екран знайомства з додатком на основі HorizontalPager.
- *
- * @param initialPage сторінка, з якої почати (відновлюється з налаштувань)
- * @param onPageChanged викликається при зміні сторінки (для збереження прогресу)
- * @param onFinished користувач завершив або пропустив знайомство
- * @param topBarActions додаткові елементи у верхній панелі (наприклад, перемикач мови)
+ * Не містить логіки: лише відображає [state] і надсилає [OnboardingIntent].
  */
 @Composable
 fun OnboardingScreen(
-    onFinished: () -> Unit,
+    state: OnboardingState,
+    pagerState: PagerState,
+    onIntent: (OnboardingIntent) -> Unit,
     modifier: Modifier = Modifier,
-    initialPage: Int = 0,
-    onPageChanged: (Int) -> Unit = {},
     topBarActions: @Composable RowScope.() -> Unit = {},
 ) {
     val pages = onboardingPages
-    val pagerState = rememberPagerState(
-        initialPage = initialPage.coerceIn(0, pages.lastIndex),
-        pageCount = { pages.size },
-    )
-    val scope = rememberCoroutineScope()
-    val isLastPage = pagerState.currentPage == pages.lastIndex
+    val isLastPage = state.isLastPage
 
     LaunchedEffect(pagerState) {
         snapshotFlow { pagerState.currentPage }.collect { page ->
-            log.d { "Page selected: ${page + 1}/${pages.size}" }
-            onPageChanged(page)
+            onIntent(OnboardingIntent.PageChanged(page))
         }
     }
 
@@ -104,10 +124,7 @@ fun OnboardingScreen(
             Spacer(Modifier.weight(1f))
             topBarActions()
             AnimatedVisibility(visible = !isLastPage, enter = fadeIn(), exit = fadeOut()) {
-                TextButton(onClick = {
-                    log.i { "Onboarding skipped on page ${pagerState.currentPage + 1}" }
-                    onFinished()
-                }) {
+                TextButton(onClick = { onIntent(OnboardingIntent.SkipClicked) }) {
                     Text(
                         text = stringResource(Res.string.onboarding_skip),
                         style = MaterialTheme.typography.titleMedium,
@@ -127,7 +144,7 @@ fun OnboardingScreen(
                 .padding(horizontal = 24.dp, vertical = 24.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            PagerIndicator(pageCount = pages.size, currentPage = pagerState.currentPage)
+            PagerIndicator(pageCount = state.pageCount, currentPage = state.currentPage)
             Spacer(Modifier.weight(1f))
             AnimatedContent(
                 targetState = isLastPage,
@@ -136,21 +153,14 @@ fun OnboardingScreen(
                 if (last) {
                     GradientButton(
                         text = stringResource(Res.string.onboarding_start),
-                        onClick = {
-                            log.i { "Onboarding completed" }
-                            onFinished()
-                        },
+                        onClick = { onIntent(OnboardingIntent.FinishClicked) },
                         large = true,
                     )
                 } else {
                     RouteButton(
                         text = stringResource(Res.string.onboarding_next),
                         showArrow = true,
-                        onClick = {
-                            scope.launch {
-                                pagerState.animateScrollToPage(pagerState.currentPage + 1)
-                            }
-                        },
+                        onClick = { onIntent(OnboardingIntent.NextClicked) },
                     )
                 }
             }

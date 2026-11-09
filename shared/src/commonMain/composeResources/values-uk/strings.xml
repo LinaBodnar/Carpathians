@@ -42,12 +42,21 @@
     <string name="gear_first_aid">Аптечка</string>
     <string name="gear_snack">Горіхи й шоколад</string>
 
-    <!-- Home -->
-    <string name="home_sign_in">Вхід</string>
-    <string name="home_choose_route">ОБРАТИ МАРШРУТ</string>
-    <string name="home_show_onboarding">Переглянути знайомство ще раз</string>
-    <string name="home_routes_soon">Список маршрутів зʼявиться в наступній версії</string>
-    <string name="home_quote">“Ми не просто ходимо в гори — ми йдемо до себе.”</string>
+    <string name="hero_quote">“Ми не просто ходимо в гори — ми йдемо до себе.”</string>
+
+    <!-- Auth -->
+    <string name="auth_title">Вхід</string>
+    <string name="auth_subtitle">З поверненням! Увійдіть, щоб спланувати наступний похід.</string>
+    <string name="auth_username">Імʼя користувача</string>
+    <string name="auth_password">Пароль</string>
+    <string name="auth_show_password">Показати</string>
+    <string name="auth_hide_password">Сховати</string>
+    <string name="auth_sign_in">Увійти</string>
+    <string name="auth_credentials_accepted">Імʼя користувача та пароль введено коректно</string>
+    <string name="auth_error_empty">Обовʼязкове поле</string>
+    <string name="auth_error_too_short">Щонайменше %1$d символи</string>
+    <string name="auth_error_invalid_characters">Лише латинські літери, цифри та . _ -</string>
+    <string name="auth_error_contains_spaces">Не може містити пробілів</string>
 
     <!-- Language -->
     <string name="language_switch_description">Мова додатка</string>

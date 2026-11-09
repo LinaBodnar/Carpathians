@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -119,9 +120,10 @@ fun GradientButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     large: Boolean = false,
+    loading: Boolean = false,
 ) {
     ScalingButton(
-        onClick = onClick,
+        onClick = { if (!loading) onClick() },
         shape = CarpathiansShapes.Pill,
         modifier = modifier,
         background = Modifier.background(CarpathiansButtonBrush),
@@ -132,10 +134,18 @@ fun GradientButton(
             PaddingValues(horizontal = 22.dp, vertical = 8.dp)
         },
     ) {
-        Text(
-            text = text,
-            style = MaterialTheme.typography.labelLarge.copy(fontSize = if (large) 20.sp else 16.sp),
-            color = CarpathiansColors.White,
-        )
+        if (loading) {
+            CircularProgressIndicator(
+                color = CarpathiansColors.White,
+                strokeWidth = 2.dp,
+                modifier = Modifier.size(if (large) 24.dp else 18.dp),
+            )
+        } else {
+            Text(
+                text = text,
+                style = MaterialTheme.typography.labelLarge.copy(fontSize = if (large) 20.sp else 16.sp),
+                color = CarpathiansColors.White,
+            )
+        }
     }
 }

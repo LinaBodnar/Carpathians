@@ -20,10 +20,38 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import carpathians.shared.generated.resources.Res
 import carpathians.shared.generated.resources.language_switch_description
+import androidx.compose.ui.text.intl.Locale
 import com.bodnar.carpathians.locale.AppLanguage
+import com.bodnar.carpathians.locale.customAppLocale
+import com.bodnar.carpathians.logging.AppLogger
+import com.bodnar.carpathians.settings.AppSettings
+import org.koin.compose.koinInject
 import com.bodnar.carpathians.theme.CarpathiansColors
 import com.bodnar.carpathians.theme.CarpathiansShapes
 import org.jetbrains.compose.resources.stringResource
+
+/**
+ * Перемикач мови, підключений до налаштувань: зберігає вибір
+ * у multiplatform-settings і одразу застосовує його до UI.
+ */
+@Composable
+fun AppLanguageSwitcher(modifier: Modifier = Modifier) {
+    val settings = koinInject<AppSettings>()
+    val current = AppLanguage.fromTag(customAppLocale)
+        ?: AppLanguage.fromTag(Locale.current.language)
+        ?: AppLanguage.English
+    LanguageSwitcher(
+        selected = current,
+        onSelect = { language ->
+            log.i { "Language changed: ${current.tag} -> ${language.tag}" }
+            settings.appLanguage = language.tag
+            customAppLocale = language.tag
+        },
+        modifier = modifier,
+    )
+}
+
+private val log = AppLogger.withTag("Language")
 
 /** Перемикач мови UA / EN у стилі вкладок маршрутів. */
 @Composable

@@ -42,12 +42,21 @@
     <string name="gear_first_aid">First aid kit</string>
     <string name="gear_snack">Nuts &amp; chocolate</string>
 
-    <!-- Home -->
-    <string name="home_sign_in">Sign in</string>
-    <string name="home_choose_route">CHOOSE A ROUTE</string>
-    <string name="home_show_onboarding">Show the introduction again</string>
-    <string name="home_routes_soon">The route list is coming in the next version</string>
-    <string name="home_quote">“We don’t just go to the mountains — we go to ourselves.”</string>
+    <string name="hero_quote">“We don’t just go to the mountains — we go to ourselves.”</string>
+
+    <!-- Auth -->
+    <string name="auth_title">Sign in</string>
+    <string name="auth_subtitle">Welcome back! Sign in to plan your next hike.</string>
+    <string name="auth_username">Username</string>
+    <string name="auth_password">Password</string>
+    <string name="auth_show_password">Show</string>
+    <string name="auth_hide_password">Hide</string>
+    <string name="auth_sign_in">Sign in</string>
+    <string name="auth_credentials_accepted">The username and password look good</string>
+    <string name="auth_error_empty">This field is required</string>
+    <string name="auth_error_too_short">Must be at least %1$d characters</string>
+    <string name="auth_error_invalid_characters">Use only Latin letters, digits and . _ -</string>
+    <string name="auth_error_contains_spaces">Must not contain spaces</string>
 
     <!-- Language -->
     <string name="language_switch_description">App language</string>
