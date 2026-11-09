@@ -79,7 +79,7 @@ fun LanguageSwitcher(
                     .clip(CarpathiansShapes.Pill)
                     .background(background)
                     .clickable(role = Role.Tab) { if (!isSelected) onSelect(language) }
-                    .padding(horizontal = 12.dp, vertical = 5.dp)
+                    .padding(horizontal = 10.dp, vertical = 5.dp)
             ) {
                 Text(
                     text = language.label,

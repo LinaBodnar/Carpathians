@@ -3,28 +3,48 @@ package com.bodnar.carpathians.ui.auth
 import com.bodnar.carpathians.domain.auth.AuthError
 import com.bodnar.carpathians.domain.auth.validation.ValidationError
 
+/** Вкладки форми, як у дизайні (.glass-login-modal): "Вхід" / "Реєстрація". */
+enum class AuthMode { SignIn, SignUp }
+
+enum class AuthField { FirstName, Username, Email, Password, ConfirmPassword }
+
 data class AuthState(
-    val username: String = "",
-    val password: String = "",
-    val usernameError: ValidationError? = null,
-    val passwordError: ValidationError? = null,
+    val mode: AuthMode = AuthMode.SignIn,
+    val values: Map<AuthField, String> = emptyMap(),
+    val errors: Map<AuthField, ValidationError> = emptyMap(),
     val isPasswordVisible: Boolean = false,
     val isLoading: Boolean = false,
-    /** Помилки показуються після першої спроби входу, далі — під час введення. */
+    /** Помилки показуються після першої спроби відправити форму, далі — під час введення. */
     val showValidation: Boolean = false,
-)
+) {
+    fun value(field: AuthField): String = values[field].orEmpty()
 
-enum class AuthField { Username, Password }
+    /** Поля поточної вкладки в порядку на екрані (і в порядку переходу клавіатурою). */
+    val fields: List<AuthField>
+        get() = when (mode) {
+            AuthMode.SignIn -> listOf(AuthField.Username, AuthField.Password)
+            AuthMode.SignUp -> listOf(
+                AuthField.FirstName,
+                AuthField.Username,
+                AuthField.Email,
+                AuthField.Password,
+                AuthField.ConfirmPassword,
+            )
+        }
+}
 
 sealed interface AuthIntent {
-    data class UsernameChanged(val value: String) : AuthIntent
-    data class PasswordChanged(val value: String) : AuthIntent
+    data class ModeChanged(val mode: AuthMode) : AuthIntent
+    data class FieldChanged(val field: AuthField, val value: String) : AuthIntent
     data object TogglePasswordVisibility : AuthIntent
-    data object SignIn : AuthIntent
+
+    /** Кнопка "Увійти" / "Зареєструватися" або дія клавіатури на останньому полі. */
+    data object Submit : AuthIntent
 }
 
 sealed interface AuthEffect {
     data class FocusField(val field: AuthField) : AuthEffect
     data class ShowError(val error: AuthError) : AuthEffect
+    data class Registered(val username: String) : AuthEffect
     data object NavigateToHome : AuthEffect
 }

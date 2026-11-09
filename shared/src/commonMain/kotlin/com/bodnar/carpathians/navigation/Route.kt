@@ -17,7 +17,17 @@ sealed interface Route : NavKey {
 
     @Serializable
     data object Home : Route
+
+    @Serializable
+    data object Routes : Route
+
+    @Serializable
+    data class RouteDetails(val routeId: String) : Route
 }
+
+/** Екрани, доступні лише авторизованому користувачу. */
+val Route.requiresAuth: Boolean
+    get() = this is Route.Home || this is Route.Routes || this is Route.RouteDetails
 
 /**
  * Конфігурація збереження back stack. На не-Android платформах Navigation 3
@@ -29,6 +39,8 @@ val navSavedStateConfiguration = SavedStateConfiguration {
             subclass(Route.Onboarding::class, Route.Onboarding.serializer())
             subclass(Route.Auth::class, Route.Auth.serializer())
             subclass(Route.Home::class, Route.Home.serializer())
+            subclass(Route.Routes::class, Route.Routes.serializer())
+            subclass(Route.RouteDetails::class, Route.RouteDetails.serializer())
         }
     }
 }

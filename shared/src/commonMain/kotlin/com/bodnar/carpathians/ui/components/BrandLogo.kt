@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,9 +29,9 @@ fun BrandLogo(modifier: Modifier = Modifier) {
         Image(
             painter = painterResource(Res.drawable.logo),
             contentDescription = null,
-            modifier = Modifier.size(32.dp).padding(end = 6.dp),
+            modifier = Modifier.size(30.dp).padding(end = 6.dp),
         )
-        Text(
+        FitText(
             text = "Carpathians",
             style = TextStyle(
                 fontFamily = brandFontFamily(),
@@ -40,14 +39,18 @@ fun BrandLogo(modifier: Modifier = Modifier) {
                 color = CarpathiansColors.White,
                 shadow = TextShadow,
             ),
+            minFontSize = 11.sp,
         )
     }
 }
 
-/** Великий заголовок "ADVENTURE" з hero-секції. */
+/**
+ * Великий заголовок "ADVENTURE" з hero-секції.
+ * Завжди в один рядок: на вузьких екранах шрифт зменшується.
+ */
 @Composable
 fun AdventureTitle(modifier: Modifier = Modifier, fontSize: Int = 64) {
-    Text(
+    FitText(
         text = "ADVENTURE",
         modifier = modifier,
         style = TextStyle(
@@ -57,5 +60,6 @@ fun AdventureTitle(modifier: Modifier = Modifier, fontSize: Int = 64) {
             color = CarpathiansColors.White,
             shadow = TextShadow,
         ),
+        minFontSize = 24.sp,
     )
 }

@@ -37,6 +37,15 @@ data class TokensDto(
     val refreshToken: String,
 )
 
+/** POST /users/add — реєстрація (DummyJSON імітує створення користувача). */
+@Serializable
+data class RegisterRequestDto(
+    val firstName: String,
+    val username: String,
+    val email: String,
+    val password: String,
+)
+
 /** GET /auth/me */
 @Serializable
 data class UserDto(

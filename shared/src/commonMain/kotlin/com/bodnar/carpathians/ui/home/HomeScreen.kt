@@ -45,6 +45,12 @@ import com.bodnar.carpathians.ui.components.GlassPanel
 import com.bodnar.carpathians.ui.components.RouteButton
 import com.bodnar.carpathians.ui.components.TextShadow
 import com.bodnar.carpathians.ui.components.message
+import com.bodnar.carpathians.ui.components.FitText
+import com.bodnar.carpathians.ui.components.showMessage
+import androidx.compose.ui.text.font.FontStyle
+import carpathians.shared.generated.resources.home_choose_route
+import carpathians.shared.generated.resources.hero_subtitle
+import carpathians.shared.generated.resources.hero_quote
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -53,6 +59,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun HomeRoute(
     onNavigateToAuth: () -> Unit,
+    onNavigateToRoutes: () -> Unit,
     viewModel: HomeViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -60,12 +67,9 @@ fun HomeRoute(
 
     CollectEffects(viewModel.effects) { effect ->
         when (effect) {
-            is HomeEffect.ShowError -> snackbarHostState.showSnackbar(
-                message = getString(effect.error.message),
-                withDismissAction = true,
-            )
-
+            is HomeEffect.ShowError -> snackbarHostState.showMessage(getString(effect.error.message), isError = true)
             HomeEffect.NavigateToAuth -> onNavigateToAuth()
+            HomeEffect.NavigateToRoutes -> onNavigateToRoutes()
         }
     }
 
@@ -103,17 +107,17 @@ fun HomeScreen(
                     .fillMaxWidth()
                     .background(CarpathiansColors.OverlayStrong)
                     .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal))
-                    .padding(horizontal = 20.dp, vertical = 12.dp),
+                    .padding(start = 16.dp, end = 4.dp, top = 8.dp, bottom = 8.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                BrandLogo()
-                Spacer(Modifier.weight(1f))
-                AppLanguageSwitcher(Modifier.padding(end = 4.dp))
+                BrandLogo(Modifier.weight(1f))
+                AppLanguageSwitcher()
                 TextButton(onClick = { onIntent(HomeIntent.Logout) }) {
                     Text(
                         text = stringResource(Res.string.home_logout),
                         style = MaterialTheme.typography.titleSmall,
                         color = CarpathiansColors.TextNav,
+                        maxLines = 1,
                     )
                 }
             }
@@ -124,10 +128,16 @@ fun HomeScreen(
                     .fillMaxWidth()
                     .verticalScroll(rememberScrollState())
                     .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal))
-                    .padding(horizontal = 24.dp, vertical = 32.dp),
+                    .padding(horizontal = 20.dp, vertical = 28.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                AdventureTitle(fontSize = 48)
+                AdventureTitle(fontSize = 56)
+                FitText(
+                    text = stringResource(Res.string.hero_subtitle),
+                    style = MaterialTheme.typography.titleLarge.copy(shadow = TextShadow),
+                    color = CarpathiansColors.White,
+                    minFontSize = 14.sp,
+                )
                 Spacer(Modifier.height(24.dp))
 
                 GlassPanel(Modifier.widthIn(max = 420.dp).fillMaxWidth()) {
@@ -142,16 +152,33 @@ fun HomeScreen(
                 }
 
                 Spacer(Modifier.height(24.dp))
+                // Як у hero-секції дизайну: .route-button "ОБРАТИ МАРШРУТ"
                 RouteButton(
-                    text = stringResource(Res.string.home_refresh),
-                    onClick = { onIntent(HomeIntent.Refresh) },
+                    text = stringResource(Res.string.home_choose_route),
+                    onClick = { onIntent(HomeIntent.OpenRoutes) },
+                    showArrow = true,
+                )
+                Spacer(Modifier.height(8.dp))
+                TextButton(onClick = { onIntent(HomeIntent.Refresh) }, enabled = !state.isLoading) {
+                    Text(
+                        text = stringResource(Res.string.home_refresh),
+                        style = MaterialTheme.typography.titleSmall,
+                        color = CarpathiansColors.Primary,
+                        maxLines = 1,
+                    )
+                }
+                Spacer(Modifier.height(16.dp))
+                Text(
+                    text = stringResource(Res.string.hero_quote),
+                    style = MaterialTheme.typography.bodyMedium.copy(fontStyle = FontStyle.Italic),
+                    color = CarpathiansColors.TextPleasant,
+                    textAlign = TextAlign.Center,
                 )
             }
         }
 
         AppSnackbarHost(
             hostState = snackbarHostState,
-            isError = true,
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .windowInsetsPadding(WindowInsets.safeDrawing)
@@ -178,11 +205,12 @@ private fun UserCard(user: User) {
             )
         }
         Spacer(Modifier.height(14.dp))
-        Text(
+        FitText(
             text = stringResource(Res.string.home_greeting, user.firstName.ifBlank { user.username }),
             style = MaterialTheme.typography.headlineMedium.copy(shadow = TextShadow),
             color = CarpathiansColors.White,
             textAlign = TextAlign.Center,
+            minFontSize = 16.sp,
         )
         Spacer(Modifier.height(6.dp))
         Text(
@@ -203,8 +231,15 @@ private fun UserCard(user: User) {
 @Composable
 private fun InfoRow(label: String, value: String) {
     Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-        Text(label, style = MaterialTheme.typography.bodySmall, color = CarpathiansColors.TextMuted)
-        Spacer(Modifier.width(12.dp).weight(1f))
-        Text(value, style = MaterialTheme.typography.bodyMedium, color = CarpathiansColors.White)
+        Text(label, style = MaterialTheme.typography.bodySmall, color = CarpathiansColors.TextMuted, maxLines = 1)
+        Spacer(Modifier.width(12.dp))
+        FitText(
+            text = value,
+            style = MaterialTheme.typography.bodyMedium,
+            color = CarpathiansColors.White,
+            textAlign = TextAlign.End,
+            minFontSize = 10.sp,
+            modifier = Modifier.weight(1f),
+        )
     }
 }

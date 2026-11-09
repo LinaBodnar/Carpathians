@@ -95,12 +95,14 @@ fun RouteButton(
         modifier = modifier,
         background = Modifier.background(CarpathiansColors.Overlay),
         borderColor = CarpathiansColors.GlassBorderStrong,
-        contentPadding = PaddingValues(horizontal = 36.dp, vertical = 14.dp),
+        contentPadding = PaddingValues(horizontal = 28.dp, vertical = 14.dp),
     ) {
-        Text(
+        FitText(
             text = text,
             style = MaterialTheme.typography.labelLarge.copy(fontSize = 20.sp),
             color = CarpathiansColors.White,
+            minFontSize = 13.sp,
+            modifier = Modifier.weight(1f, fill = false),
         )
         if (showArrow) {
             Icon(
@@ -141,10 +143,12 @@ fun GradientButton(
                 modifier = Modifier.size(if (large) 24.dp else 18.dp),
             )
         } else {
-            Text(
+            FitText(
                 text = text,
                 style = MaterialTheme.typography.labelLarge.copy(fontSize = if (large) 20.sp else 16.sp),
                 color = CarpathiansColors.White,
+                minFontSize = 12.sp,
+                modifier = Modifier.weight(1f, fill = false),
             )
         }
     }

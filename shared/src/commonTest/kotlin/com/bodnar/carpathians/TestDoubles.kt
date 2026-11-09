@@ -5,6 +5,7 @@ import com.bodnar.carpathians.domain.auth.AuthRepository
 import com.bodnar.carpathians.domain.auth.AuthResult
 import com.bodnar.carpathians.domain.auth.AuthTokens
 import com.bodnar.carpathians.domain.auth.TokenStorage
+import com.bodnar.carpathians.domain.auth.SignUpData
 import com.bodnar.carpathians.domain.auth.User
 import kotlinx.coroutines.flow.MutableSharedFlow
 
@@ -26,12 +27,18 @@ class FakeAuthRepository(
     var loggedIn: Boolean = false,
 ) : AuthRepository {
     var lastLogin: Pair<String, String>? = null
+    var lastRegistration: SignUpData? = null
     override val sessionExpired = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
 
     override suspend fun login(username: String, password: String): AuthResult<User> {
         lastLogin = username to password
         if (loginResult is AuthResult.Success) loggedIn = true
         return loginResult
+    }
+
+    override suspend fun register(data: SignUpData): AuthResult<User> {
+        lastRegistration = data
+        return AuthResult.Success(testUser.copy(id = 209, username = data.username, email = data.email))
     }
 
     override suspend fun getCurrentUser(): AuthResult<User> =

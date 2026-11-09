@@ -11,6 +11,8 @@ import androidx.navigation3.ui.NavDisplay
 import com.bodnar.carpathians.logging.AppLogger
 import com.bodnar.carpathians.ui.auth.AuthRoute
 import com.bodnar.carpathians.ui.home.HomeRoute
+import com.bodnar.carpathians.ui.routes.RouteDetailsRoute
+import com.bodnar.carpathians.ui.routes.RoutesRoute
 import com.bodnar.carpathians.ui.onboarding.OnboardingRoute
 
 private val log = AppLogger.withTag("Navigation")
@@ -31,7 +33,7 @@ fun AppNavDisplay(
 ) {
     NavDisplay(
         backStack = backStack,
-        onBack = { if (backStack.size > 1) backStack.removeAt(backStack.lastIndex) },
+        onBack = { backStack.goBack() },
         entryDecorators = listOf(
             rememberSaveableStateHolderNavEntryDecorator(),
             viewModelDecorator,
@@ -44,10 +46,34 @@ fun AppNavDisplay(
                 AuthRoute(onNavigateToHome = { backStack.replaceAll(Route.Home) })
             }
             entry<Route.Home> {
-                HomeRoute(onNavigateToAuth = { backStack.replaceAll(Route.Auth) })
+                HomeRoute(
+                    onNavigateToAuth = { backStack.replaceAll(Route.Auth) },
+                    onNavigateToRoutes = { backStack.navigate(Route.Routes) },
+                )
+            }
+            entry<Route.Routes> {
+                RoutesRoute(
+                    onBack = { backStack.goBack() },
+                    onOpenRoute = { id -> backStack.navigate(Route.RouteDetails(id)) },
+                )
+            }
+            entry<Route.RouteDetails> { key ->
+                RouteDetailsRoute(routeId = key.routeId, onBack = { backStack.goBack() })
             }
         },
     )
+}
+
+/** Відкриває екран поверх поточного (з можливістю повернутися "назад"). */
+fun NavBackStack<NavKey>.navigate(route: Route) {
+    if (lastOrNull() == route) return
+    log.i { "Navigate: ${lastOrNull()} -> $route" }
+    add(route)
+}
+
+/** Повертає на попередній екран (останній екран у стеку не прибирається). */
+fun NavBackStack<NavKey>.goBack() {
+    if (size > 1) removeAt(lastIndex)
 }
 
 /** Замінює весь стек одним екраном (повернутися "назад" на попередній не можна). */

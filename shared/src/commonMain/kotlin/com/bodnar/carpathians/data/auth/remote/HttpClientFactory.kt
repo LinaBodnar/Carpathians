@@ -99,10 +99,11 @@ fun createHttpClient(
                     }
                 }
 
-                // Токен не надсилається у запитах входу та оновлення
+                // Токен не надсилається у запитах входу, реєстрації та оновлення
                 sendWithoutRequest { request ->
                     val path = request.url.pathSegments.joinToString("/")
-                    !path.endsWith(AuthApi.LOGIN_PATH) && !path.endsWith(AuthApi.REFRESH_PATH)
+                    listOf(AuthApi.LOGIN_PATH, AuthApi.REFRESH_PATH, AuthApi.REGISTER_PATH)
+                        .none { path.endsWith(it) }
                 }
             }
         }

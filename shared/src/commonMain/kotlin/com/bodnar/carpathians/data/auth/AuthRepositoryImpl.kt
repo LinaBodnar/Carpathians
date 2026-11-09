@@ -1,6 +1,8 @@
 package com.bodnar.carpathians.data.auth
 
 import com.bodnar.carpathians.data.auth.remote.AuthApi
+import com.bodnar.carpathians.data.auth.remote.RegisterRequestDto
+import com.bodnar.carpathians.domain.auth.SignUpData
 import com.bodnar.carpathians.data.auth.remote.clearCachedTokens
 import com.bodnar.carpathians.data.auth.remote.toTokens
 import com.bodnar.carpathians.data.auth.remote.toUser
@@ -35,6 +37,14 @@ class AuthRepositoryImpl(
         client.clearCachedTokens()
         log.i { "Logged in as ${response.username}" }
         response.toUser()
+    }
+
+    override suspend fun register(data: SignUpData): AuthResult<User> = safeCall {
+        val user = api.register(
+            RegisterRequestDto(data.firstName, data.username, data.email, data.password)
+        ).toUser()
+        log.i { "Registered ${user.username} (id ${user.id})" }
+        user
     }
 
     override suspend fun getCurrentUser(): AuthResult<User> {

@@ -5,6 +5,9 @@ import com.bodnar.carpathians.domain.auth.TokenStorage
 import com.bodnar.carpathians.settings.AppSettings
 import com.bodnar.carpathians.ui.auth.AuthViewModel
 import com.bodnar.carpathians.ui.home.HomeViewModel
+import com.bodnar.carpathians.ui.routes.RouteDetailsViewModel
+import com.bodnar.carpathians.ui.routes.RoutesViewModel
+import org.koin.core.parameter.parametersOf
 import com.bodnar.carpathians.ui.main.MainViewModel
 import com.bodnar.carpathians.ui.onboarding.OnboardingViewModel
 import com.russhwolf.settings.MapSettings
@@ -40,6 +43,8 @@ class KoinModulesTest {
             assertNotNull(koin.get<OnboardingViewModel>())
             assertNotNull(koin.get<AuthViewModel>())
             assertNotNull(koin.get<HomeViewModel>())
+            assertNotNull(koin.get<RoutesViewModel>())
+            assertNotNull(koin.get<RouteDetailsViewModel> { parametersOf("hoverla") })
         } finally {
             koin.close()
             Dispatchers.resetMain()

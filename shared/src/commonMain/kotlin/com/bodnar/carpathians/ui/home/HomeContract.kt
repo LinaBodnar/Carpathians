@@ -10,10 +10,12 @@ data class HomeState(
 
 sealed interface HomeIntent {
     data object Refresh : HomeIntent
+    data object OpenRoutes : HomeIntent
     data object Logout : HomeIntent
 }
 
 sealed interface HomeEffect {
     data class ShowError(val error: AuthError) : HomeEffect
     data object NavigateToAuth : HomeEffect
+    data object NavigateToRoutes : HomeEffect
 }

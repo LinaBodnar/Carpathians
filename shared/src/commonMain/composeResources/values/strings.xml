@@ -73,4 +73,49 @@
 
     <!-- Language -->
     <string name="language_switch_description">App language</string>
+
+    <!-- Sign up -->
+    <string name="auth_tab_sign_in">Sign in</string>
+    <string name="auth_tab_sign_up">Sign up</string>
+    <string name="auth_sign_up_title">Create an account</string>
+    <string name="auth_sign_up_subtitle">Join us and start planning your hikes.</string>
+    <string name="auth_first_name">Name</string>
+    <string name="auth_email">Email</string>
+    <string name="auth_confirm_password">Repeat password</string>
+    <string name="auth_sign_up">Sign up</string>
+    <string name="auth_sign_up_hint">DummyJSON only simulates registration</string>
+    <string name="auth_registered">Account “%1$s” created! DummyJSON is a test API and does not keep new users, so sign in with the demo account</string>
+    <string name="auth_error_invalid_name">Use letters only</string>
+    <string name="auth_error_invalid_email">Enter a valid email, e.g. name@mail.com</string>
+    <string name="auth_error_passwords_do_not_match">Passwords do not match</string>
+
+    <!-- Routes -->
+    <string name="back">Back</string>
+    <string name="home_choose_route">CHOOSE A ROUTE</string>
+    <string name="routes_title">Choose your route</string>
+    <string name="routes_subtitle">Eight routes across the Ukrainian Carpathians. Tap a route to see its key points and the map.</string>
+    <string name="routes_filter_all">All</string>
+    <string name="difficulty_easy">Easy</string>
+    <string name="difficulty_medium">Medium</string>
+    <string name="difficulty_hard">Hard</string>
+    <string name="route_length_km">%1$d km</string>
+    <string name="route_duration_one_day">1 day</string>
+    <string name="route_duration_two_days">1–2 days</string>
+    <string name="route_altitude_m">%1$d m</string>
+    <string name="route_points_title">Key points</string>
+    <string name="route_open_map">OPEN THE MAP</string>
+    <string name="route_book">JOIN A HIKE</string>
+    <string name="route_not_found">Route not found</string>
+
+    <!-- Booking -->
+    <string name="booking_title">Join a hike</string>
+    <string name="booking_subtitle">Route “%1$s”. Leave a request and we’ll contact you to discuss the details.</string>
+    <string name="booking_name">Name</string>
+    <string name="booking_phone">Phone</string>
+    <string name="booking_people">Number of people</string>
+    <string name="booking_submit">BOOK</string>
+    <string name="booking_cancel">Cancel</string>
+    <string name="booking_success">Request accepted! We will contact you soon.</string>
+    <string name="booking_error_phone">Enter a phone number, e.g. +380 67 123 45 67</string>
+    <string name="booking_error_people">From %1$d to %2$d people</string>
 </resources>

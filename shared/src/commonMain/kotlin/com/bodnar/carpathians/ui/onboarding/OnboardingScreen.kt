@@ -22,6 +22,8 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bodnar.carpathians.core.mvi.CollectEffects
 import com.bodnar.carpathians.ui.components.AppLanguageSwitcher
+import com.bodnar.carpathians.ui.components.FitText
+import androidx.compose.ui.unit.sp
 import org.koin.compose.viewmodel.koinViewModel
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -117,18 +119,18 @@ fun OnboardingScreen(
                 .align(Alignment.TopCenter)
                 .fillMaxWidth()
                 .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal))
-                .padding(horizontal = 20.dp, vertical = 12.dp),
+                .padding(horizontal = 16.dp, vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            BrandLogo()
-            Spacer(Modifier.weight(1f))
+            BrandLogo(Modifier.weight(1f))
             topBarActions()
             AnimatedVisibility(visible = !isLastPage, enter = fadeIn(), exit = fadeOut()) {
                 TextButton(onClick = { onIntent(OnboardingIntent.SkipClicked) }) {
                     Text(
                         text = stringResource(Res.string.onboarding_skip),
-                        style = MaterialTheme.typography.titleMedium,
+                        style = MaterialTheme.typography.titleSmall,
                         color = CarpathiansColors.TextNav,
+                        maxLines = 1,
                     )
                 }
             }
@@ -230,10 +232,11 @@ private fun OnboardingPageContent(
                 AdventureTitle(fontSize = 54)
                 Spacer(Modifier.height(8.dp))
             }
-            Text(
+            FitText(
                 text = stringResource(page.title),
                 style = MaterialTheme.typography.displaySmall.copy(shadow = TextShadow),
                 color = CarpathiansColors.White,
+                minFontSize = 18.sp,
             )
             Spacer(Modifier.height(12.dp))
             Text(

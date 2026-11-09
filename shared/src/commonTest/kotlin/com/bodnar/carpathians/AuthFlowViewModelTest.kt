@@ -8,14 +8,32 @@ import com.bodnar.carpathians.domain.auth.IsUserLoggedInUseCase
 import com.bodnar.carpathians.domain.auth.LoginUseCase
 import com.bodnar.carpathians.domain.auth.LogoutUseCase
 import com.bodnar.carpathians.domain.auth.ObserveSessionExpiredUseCase
-import com.bodnar.carpathians.domain.auth.validation.ValidatePasswordUseCase
-import com.bodnar.carpathians.domain.auth.validation.ValidateUsernameUseCase
 import com.bodnar.carpathians.domain.onboarding.IsOnboardingCompletedUseCase
 import com.bodnar.carpathians.navigation.Route
 import com.bodnar.carpathians.settings.AppSettings
 import com.bodnar.carpathians.ui.auth.AuthEffect
 import com.bodnar.carpathians.ui.auth.AuthIntent
 import com.bodnar.carpathians.ui.auth.AuthViewModel
+import com.bodnar.carpathians.ui.auth.AuthField
+import com.bodnar.carpathians.ui.auth.AuthMode
+import com.bodnar.carpathians.ui.auth.AuthValidators
+import com.bodnar.carpathians.domain.auth.RegisterUseCase
+import com.bodnar.carpathians.domain.auth.validation.ValidateNameUseCase
+import com.bodnar.carpathians.domain.auth.validation.ValidatePhoneUseCase
+import com.bodnar.carpathians.domain.auth.validation.ValidatePeopleCountUseCase
+import com.bodnar.carpathians.data.routes.RoutesRepositoryImpl
+import com.bodnar.carpathians.domain.routes.Difficulty
+import com.bodnar.carpathians.domain.routes.GetRouteDetailsUseCase
+import com.bodnar.carpathians.domain.routes.GetRoutesUseCase
+import com.bodnar.carpathians.ui.routes.BookingField
+import com.bodnar.carpathians.ui.routes.RouteDetailsEffect
+import com.bodnar.carpathians.ui.routes.RouteDetailsIntent
+import com.bodnar.carpathians.ui.routes.RouteDetailsViewModel
+import com.bodnar.carpathians.ui.routes.RoutesEffect
+import com.bodnar.carpathians.ui.routes.RoutesIntent
+import com.bodnar.carpathians.ui.routes.RoutesViewModel
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
 import com.bodnar.carpathians.ui.home.HomeEffect
 import com.bodnar.carpathians.ui.home.HomeIntent
 import com.bodnar.carpathians.ui.home.HomeViewModel
@@ -47,15 +65,84 @@ class AuthFlowViewModelTest {
     fun tearDown() = Dispatchers.resetMain()
 
     private fun authViewModel() = AuthViewModel(
-        ValidateUsernameUseCase(),
-        ValidatePasswordUseCase(),
+        AuthValidators(),
         LoginUseCase(repository),
+        RegisterUseCase(repository),
     )
 
     private fun AuthViewModel.enter(username: String, password: String) {
-        onIntent(AuthIntent.UsernameChanged(username))
-        onIntent(AuthIntent.PasswordChanged(password))
-        onIntent(AuthIntent.SignIn)
+        onIntent(AuthIntent.FieldChanged(AuthField.Username, username))
+        onIntent(AuthIntent.FieldChanged(AuthField.Password, password))
+        onIntent(AuthIntent.Submit)
+    }
+
+    @Test
+    fun successfulRegistrationReturnsToSignInWithUsername() = runTest {
+        val viewModel = authViewModel()
+        viewModel.onIntent(AuthIntent.ModeChanged(AuthMode.SignUp))
+        mapOf(
+            AuthField.FirstName to "Ліна",
+            AuthField.Username to "lina",
+            AuthField.Email to "lina@mail.com",
+            AuthField.Password to "secret1",
+            AuthField.ConfirmPassword to "secret1",
+        ).forEach { (field, value) -> viewModel.onIntent(AuthIntent.FieldChanged(field, value)) }
+        viewModel.onIntent(AuthIntent.Submit)
+
+        assertEquals(AuthEffect.Registered("lina"), viewModel.effects.first())
+        assertEquals("lina@mail.com", repository.lastRegistration?.email)
+        val state = viewModel.state.value
+        assertEquals(AuthMode.SignIn, state.mode)
+        assertEquals("lina", state.value(AuthField.Username))
+        assertEquals("", state.value(AuthField.Password))
+    }
+
+    @Test
+    fun routesListIsFilteredByDifficulty() = runTest {
+        val viewModel = RoutesViewModel(GetRoutesUseCase(RoutesRepositoryImpl()))
+        assertEquals(8, viewModel.state.value.routes.size)
+
+        viewModel.onIntent(RoutesIntent.FilterSelected(Difficulty.Easy))
+        assertEquals(listOf("kukul"), viewModel.state.value.routes.map { it.id })
+
+        viewModel.onIntent(RoutesIntent.RouteClicked("kukul"))
+        assertEquals(RoutesEffect.OpenRoute("kukul"), viewModel.effects.first())
+    }
+
+    private fun routeDetails(id: String) = RouteDetailsViewModel(
+        id,
+        GetRouteDetailsUseCase(RoutesRepositoryImpl()),
+        ValidateNameUseCase(),
+        ValidatePhoneUseCase(),
+        ValidatePeopleCountUseCase(),
+    )
+
+    @Test
+    fun routeDetailsLoadsRouteAndOpensMap() = runTest {
+        val viewModel = routeDetails("hoverla")
+        val route = viewModel.state.value.route!!
+        assertEquals(2061, route.maxAltitude)
+
+        viewModel.onIntent(RouteDetailsIntent.OpenMap)
+        assertEquals(RouteDetailsEffect.OpenUrl(route.mapUrl), viewModel.effects.first())
+
+        assertTrue(routeDetails("unknown").state.value.isNotFound)
+    }
+
+    @Test
+    fun bookingIsValidatedAndAccepted() = runTest {
+        val viewModel = routeDetails("kukul")
+        viewModel.onIntent(RouteDetailsIntent.BookClicked)
+        viewModel.onIntent(RouteDetailsIntent.SubmitBooking)
+        assertEquals(RouteDetailsEffect.FocusBookingField(BookingField.Name), viewModel.effects.first())
+
+        viewModel.onIntent(RouteDetailsIntent.BookingFieldChanged(BookingField.Name, "Ліна"))
+        viewModel.onIntent(RouteDetailsIntent.BookingFieldChanged(BookingField.Phone, "+380671234567"))
+        viewModel.onIntent(RouteDetailsIntent.BookingFieldChanged(BookingField.People, "3"))
+        viewModel.onIntent(RouteDetailsIntent.SubmitBooking)
+
+        assertEquals(RouteDetailsEffect.BookingAccepted, viewModel.effects.first())
+        assertNull(viewModel.state.value.booking)
     }
 
     @Test

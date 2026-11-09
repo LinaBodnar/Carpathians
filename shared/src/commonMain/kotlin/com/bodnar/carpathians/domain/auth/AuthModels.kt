@@ -16,6 +16,14 @@ data class User(
             .ifEmpty { username.take(1).uppercase() }
 }
 
+/** Дані форми реєстрації. */
+data class SignUpData(
+    val firstName: String,
+    val username: String,
+    val email: String,
+    val password: String,
+)
+
 /** Пара токенів, отримана від сервера. */
 data class AuthTokens(
     val accessToken: String,

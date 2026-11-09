@@ -14,6 +14,9 @@ class AuthApi(private val client: HttpClient) {
             setBody(LoginRequestDto(username, password, ACCESS_TOKEN_LIFETIME_MINUTES))
         }.body()
 
+    suspend fun register(request: RegisterRequestDto): UserDto =
+        client.post(REGISTER_PATH) { setBody(request) }.body()
+
     suspend fun me(): UserDto = client.get(ME_PATH).body()
 
     companion object {
@@ -21,6 +24,7 @@ class AuthApi(private val client: HttpClient) {
         const val LOGIN_PATH = "auth/login"
         const val REFRESH_PATH = "auth/refresh"
         const val ME_PATH = "auth/me"
+        const val REGISTER_PATH = "users/add"
 
         /**
          * Короткий час життя access-токена (1 хв), щоб автоматичне оновлення

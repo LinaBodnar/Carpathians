@@ -73,4 +73,49 @@
 
     <!-- Language -->
     <string name="language_switch_description">Мова додатка</string>
+
+    <!-- Sign up -->
+    <string name="auth_tab_sign_in">Вхід</string>
+    <string name="auth_tab_sign_up">Реєстрація</string>
+    <string name="auth_sign_up_title">Створіть акаунт</string>
+    <string name="auth_sign_up_subtitle">Приєднуйтеся та плануйте свої походи.</string>
+    <string name="auth_first_name">Імʼя</string>
+    <string name="auth_email">Email</string>
+    <string name="auth_confirm_password">Повторіть пароль</string>
+    <string name="auth_sign_up">Зареєструватися</string>
+    <string name="auth_sign_up_hint">DummyJSON лише імітує реєстрацію</string>
+    <string name="auth_registered">Акаунт «%1$s» створено! DummyJSON — тестовий API і не зберігає нових користувачів, тож увійдіть демо-акаунтом</string>
+    <string name="auth_error_invalid_name">Лише літери</string>
+    <string name="auth_error_invalid_email">Введіть коректний email, напр. name@mail.com</string>
+    <string name="auth_error_passwords_do_not_match">Паролі не збігаються</string>
+
+    <!-- Routes -->
+    <string name="back">Назад</string>
+    <string name="home_choose_route">ОБРАТИ МАРШРУТ</string>
+    <string name="routes_title">Оберіть свій маршрут</string>
+    <string name="routes_subtitle">Вісім маршрутів Українськими Карпатами. Оберіть маршрут, щоб побачити ключові точки та карту.</string>
+    <string name="routes_filter_all">Усі</string>
+    <string name="difficulty_easy">Легкий</string>
+    <string name="difficulty_medium">Середній</string>
+    <string name="difficulty_hard">Важкий</string>
+    <string name="route_length_km">%1$d км</string>
+    <string name="route_duration_one_day">1 день</string>
+    <string name="route_duration_two_days">1–2 дні</string>
+    <string name="route_altitude_m">%1$d м</string>
+    <string name="route_points_title">Ключові точки</string>
+    <string name="route_open_map">ВІДКРИТИ КАРТУ</string>
+    <string name="route_book">ЗАПИСАТИСЯ В ПОХІД</string>
+    <string name="route_not_found">Маршрут не знайдено</string>
+
+    <!-- Booking -->
+    <string name="booking_title">Запис у похід</string>
+    <string name="booking_subtitle">Маршрут «%1$s». Залиште заявку, і ми звʼяжемося з вами для обговорення деталей.</string>
+    <string name="booking_name">Імʼя</string>
+    <string name="booking_phone">Телефон</string>
+    <string name="booking_people">Кількість осіб</string>
+    <string name="booking_submit">ЗАБРОНЮВАТИ</string>
+    <string name="booking_cancel">Скасувати</string>
+    <string name="booking_success">Заявку прийнято! Ми звʼяжемося з вами найближчим часом.</string>
+    <string name="booking_error_phone">Введіть номер, напр. +380 67 123 45 67</string>
+    <string name="booking_error_people">Від %1$d до %2$d осіб</string>
 </resources>

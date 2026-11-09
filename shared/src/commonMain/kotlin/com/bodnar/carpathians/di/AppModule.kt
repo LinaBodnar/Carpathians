@@ -14,6 +14,19 @@ import com.bodnar.carpathians.domain.auth.LogoutUseCase
 import com.bodnar.carpathians.domain.auth.ObserveSessionExpiredUseCase
 import com.bodnar.carpathians.domain.auth.TokenStorage
 import com.bodnar.carpathians.domain.auth.validation.ValidatePasswordUseCase
+import com.bodnar.carpathians.domain.auth.validation.ValidateNameUseCase
+import com.bodnar.carpathians.domain.auth.validation.ValidateEmailUseCase
+import com.bodnar.carpathians.domain.auth.validation.ValidatePasswordConfirmationUseCase
+import com.bodnar.carpathians.domain.auth.validation.ValidatePhoneUseCase
+import com.bodnar.carpathians.domain.auth.validation.ValidatePeopleCountUseCase
+import com.bodnar.carpathians.domain.auth.RegisterUseCase
+import com.bodnar.carpathians.domain.routes.GetRouteDetailsUseCase
+import com.bodnar.carpathians.domain.routes.GetRoutesUseCase
+import com.bodnar.carpathians.domain.routes.RoutesRepository
+import com.bodnar.carpathians.data.routes.RoutesRepositoryImpl
+import com.bodnar.carpathians.ui.auth.AuthValidators
+import com.bodnar.carpathians.ui.routes.RouteDetailsViewModel
+import com.bodnar.carpathians.ui.routes.RoutesViewModel
 import com.bodnar.carpathians.domain.auth.validation.ValidateUsernameUseCase
 import com.bodnar.carpathians.domain.onboarding.CompleteOnboardingUseCase
 import com.bodnar.carpathians.domain.onboarding.GetOnboardingPageUseCase
@@ -50,6 +63,9 @@ val dataModule = module {
     single { createHttpClient(tokenStorage = get(), sessionEvents = get()) }
     singleOf(::AuthApi)
     singleOf(::AuthRepositoryImpl) bind AuthRepository::class
+
+    // Маршрути
+    singleOf(::RoutesRepositoryImpl) bind RoutesRepository::class
 }
 
 val domainModule = module {
@@ -57,14 +73,28 @@ val domainModule = module {
     factoryOf(::CompleteOnboardingUseCase)
     factoryOf(::GetOnboardingPageUseCase)
     factoryOf(::SaveOnboardingPageUseCase)
+
+    // Валідація форм
     factoryOf(::ValidateUsernameUseCase)
     factoryOf(::ValidatePasswordUseCase)
+    factoryOf(::ValidateNameUseCase)
+    factoryOf(::ValidateEmailUseCase)
+    factoryOf(::ValidatePasswordConfirmationUseCase)
+    factoryOf(::ValidatePhoneUseCase)
+    factoryOf(::ValidatePeopleCountUseCase)
+    factoryOf(::AuthValidators)
 
+    // Авторизація
     factoryOf(::LoginUseCase)
+    factoryOf(::RegisterUseCase)
     factoryOf(::GetCurrentUserUseCase)
     factoryOf(::IsUserLoggedInUseCase)
     factoryOf(::LogoutUseCase)
     factoryOf(::ObserveSessionExpiredUseCase)
+
+    // Маршрути
+    factoryOf(::GetRoutesUseCase)
+    factoryOf(::GetRouteDetailsUseCase)
 }
 
 val presentationModule = module {
@@ -72,6 +102,8 @@ val presentationModule = module {
     viewModel { OnboardingViewModel(get(), get(), get()) }
     viewModelOf(::AuthViewModel)
     viewModelOf(::HomeViewModel)
+    viewModelOf(::RoutesViewModel)
+    viewModel { (routeId: String) -> RouteDetailsViewModel(routeId, get(), get(), get(), get()) }
 }
 
 val appModules = listOf(platformModule, dataModule, domainModule, presentationModule)

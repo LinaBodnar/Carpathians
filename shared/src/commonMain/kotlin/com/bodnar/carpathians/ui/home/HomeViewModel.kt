@@ -23,6 +23,7 @@ class HomeViewModel(
     override fun onIntent(intent: HomeIntent) {
         when (intent) {
             HomeIntent.Refresh -> loadUser()
+            HomeIntent.OpenRoutes -> sendEffect(HomeEffect.NavigateToRoutes)
             HomeIntent.Logout -> viewModelScope.launch {
                 logout()
                 sendEffect(HomeEffect.NavigateToAuth)

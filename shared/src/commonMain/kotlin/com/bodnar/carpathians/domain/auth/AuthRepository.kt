@@ -6,6 +6,9 @@ interface AuthRepository {
     /** Вхід за іменем і паролем; токени зберігаються в безпечному сховищі. */
     suspend fun login(username: String, password: String): AuthResult<User>
 
+    /** Реєстрація нового користувача. */
+    suspend fun register(data: SignUpData): AuthResult<User>
+
     /** Профіль поточного користувача (захищений запит з access-токеном). */
     suspend fun getCurrentUser(): AuthResult<User>
 
