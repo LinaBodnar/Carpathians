@@ -44,6 +44,13 @@ kotlin {
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.compose.uiTooling)
             implementation(libs.koin.android)
+            implementation(libs.ktor.client.okhttp)
+        }
+        jvmMain.dependencies {
+            implementation(libs.ktor.client.okhttp)
+        }
+        webMain.dependencies {
+            implementation(libs.ktor.client.js)
         }
         commonMain.dependencies {
             implementation(libs.compose.runtime)
@@ -70,11 +77,22 @@ kotlin {
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
+
+            // Мережа
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.client.auth)
+            implementation(libs.ktor.client.logging)
+            implementation(libs.ktor.serialization.kotlinx.json)
+
+            // Безпечне (зашифроване) сховище токенів
+            implementation(libs.ksafe)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
             implementation(libs.multiplatform.settings.test)
             implementation(libs.kotlinx.coroutines.test)
+            implementation(libs.ktor.client.mock)
         }
         jsMain.dependencies {
             implementation(libs.wrappers.browser)

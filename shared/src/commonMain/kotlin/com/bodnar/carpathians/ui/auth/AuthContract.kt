@@ -1,5 +1,6 @@
 package com.bodnar.carpathians.ui.auth
 
+import com.bodnar.carpathians.domain.auth.AuthError
 import com.bodnar.carpathians.domain.auth.validation.ValidationError
 
 data class AuthState(
@@ -24,5 +25,6 @@ sealed interface AuthIntent {
 
 sealed interface AuthEffect {
     data class FocusField(val field: AuthField) : AuthEffect
-    data object CredentialsAccepted : AuthEffect
+    data class ShowError(val error: AuthError) : AuthEffect
+    data object NavigateToHome : AuthEffect
 }

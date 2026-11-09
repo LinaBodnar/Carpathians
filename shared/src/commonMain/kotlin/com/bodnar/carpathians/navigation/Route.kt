@@ -14,6 +14,9 @@ sealed interface Route : NavKey {
 
     @Serializable
     data object Auth : Route
+
+    @Serializable
+    data object Home : Route
 }
 
 /**
@@ -25,6 +28,7 @@ val navSavedStateConfiguration = SavedStateConfiguration {
         polymorphic(NavKey::class) {
             subclass(Route.Onboarding::class, Route.Onboarding.serializer())
             subclass(Route.Auth::class, Route.Auth.serializer())
+            subclass(Route.Home::class, Route.Home.serializer())
         }
     }
 }

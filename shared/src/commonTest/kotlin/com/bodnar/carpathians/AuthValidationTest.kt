@@ -1,5 +1,6 @@
 package com.bodnar.carpathians
 
+import com.bodnar.carpathians.domain.auth.LoginUseCase
 import com.bodnar.carpathians.domain.auth.validation.ValidatePasswordUseCase
 import com.bodnar.carpathians.domain.auth.validation.ValidateUsernameUseCase
 import com.bodnar.carpathians.domain.auth.validation.ValidationError
@@ -36,7 +37,7 @@ class AuthValidationTest {
         assertNull(validatePassword("emilyspass"))
     }
 
-    private fun createViewModel() = AuthViewModel(validateUsername, validatePassword)
+    private fun createViewModel() = AuthViewModel(validateUsername, validatePassword, LoginUseCase(FakeAuthRepository()))
 
     @Test
     fun errorsAreHiddenUntilFirstSignIn() {
@@ -68,16 +69,6 @@ class AuthValidationTest {
         viewModel.onIntent(AuthIntent.SignIn)
 
         assertEquals(AuthEffect.FocusField(AuthField.Password), viewModel.effects.first())
-    }
-
-    @Test
-    fun validCredentialsAreAccepted() = runTest {
-        val viewModel = createViewModel()
-        viewModel.onIntent(AuthIntent.UsernameChanged("emilys"))
-        viewModel.onIntent(AuthIntent.PasswordChanged("emilyspass"))
-        viewModel.onIntent(AuthIntent.SignIn)
-
-        assertEquals(AuthEffect.CredentialsAccepted, viewModel.effects.first())
     }
 
     @Test

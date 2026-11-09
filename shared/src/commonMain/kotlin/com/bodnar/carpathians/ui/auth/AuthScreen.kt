@@ -33,7 +33,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import carpathians.shared.generated.resources.Res
-import carpathians.shared.generated.resources.auth_credentials_accepted
+import carpathians.shared.generated.resources.auth_demo_hint
 import carpathians.shared.generated.resources.auth_error_contains_spaces
 import carpathians.shared.generated.resources.auth_error_empty
 import carpathians.shared.generated.resources.auth_error_invalid_characters
@@ -59,6 +59,7 @@ import com.bodnar.carpathians.ui.components.BrandLogo
 import com.bodnar.carpathians.ui.components.GlassPanel
 import com.bodnar.carpathians.ui.components.GradientButton
 import com.bodnar.carpathians.ui.components.TextShadow
+import com.bodnar.carpathians.ui.components.message
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -66,6 +67,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun AuthRoute(
+    onNavigateToHome: () -> Unit,
     viewModel: AuthViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -80,8 +82,15 @@ fun AuthRoute(
                 AuthField.Password -> passwordFocus.requestFocus()
             }
 
-            AuthEffect.CredentialsAccepted ->
-                snackbarHostState.showSnackbar(getString(Res.string.auth_credentials_accepted))
+            is AuthEffect.ShowError -> {
+                snackbarHostState.currentSnackbarData?.dismiss()
+                snackbarHostState.showSnackbar(
+                    message = getString(effect.error.message),
+                    withDismissAction = true,
+                )
+            }
+
+            AuthEffect.NavigateToHome -> onNavigateToHome()
         }
     }
 
@@ -236,6 +245,14 @@ fun AuthScreen(
                             loading = state.isLoading,
                             modifier = Modifier.fillMaxWidth(),
                         )
+                        Spacer(Modifier.height(12.dp))
+                        Text(
+                            text = stringResource(Res.string.auth_demo_hint),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = CarpathiansColors.TextMuted,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.fillMaxWidth(),
+                        )
                     }
                 }
 
@@ -251,6 +268,7 @@ fun AuthScreen(
 
         AppSnackbarHost(
             hostState = snackbarHostState,
+            isError = true,
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .windowInsetsPadding(WindowInsets.safeDrawing)

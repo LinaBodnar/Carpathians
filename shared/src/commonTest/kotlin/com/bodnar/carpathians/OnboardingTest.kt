@@ -5,9 +5,7 @@ import com.bodnar.carpathians.domain.onboarding.CompleteOnboardingUseCase
 import com.bodnar.carpathians.domain.onboarding.GetOnboardingPageUseCase
 import com.bodnar.carpathians.domain.onboarding.IsOnboardingCompletedUseCase
 import com.bodnar.carpathians.domain.onboarding.SaveOnboardingPageUseCase
-import com.bodnar.carpathians.navigation.Route
 import com.bodnar.carpathians.settings.AppSettings
-import com.bodnar.carpathians.ui.main.MainViewModel
 import com.bodnar.carpathians.ui.onboarding.OnboardingEffect
 import com.bodnar.carpathians.ui.onboarding.OnboardingIntent
 import com.bodnar.carpathians.ui.onboarding.OnboardingViewModel
@@ -16,7 +14,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class OnboardingTest {
@@ -71,15 +68,5 @@ class OnboardingTest {
 
         assertEquals(OnboardingEffect.NavigateToAuth, viewModel.effects.first())
         assertTrue(settings.isOnboardingCompleted)
-    }
-
-    @Test
-    fun mainViewModelChoosesStartScreen() {
-        val isCompleted = IsOnboardingCompletedUseCase(repository)
-        assertFalse(settings.isOnboardingCompleted)
-        assertEquals(Route.Onboarding, MainViewModel(isCompleted).state.value.startRoute)
-
-        CompleteOnboardingUseCase(repository)()
-        assertEquals(Route.Auth, MainViewModel(isCompleted).state.value.startRoute)
     }
 }

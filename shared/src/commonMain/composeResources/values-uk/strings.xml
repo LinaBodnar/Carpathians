@@ -52,11 +52,24 @@
     <string name="auth_show_password">Показати</string>
     <string name="auth_hide_password">Сховати</string>
     <string name="auth_sign_in">Увійти</string>
-    <string name="auth_credentials_accepted">Імʼя користувача та пароль введено коректно</string>
+    <string name="auth_demo_hint">Демо-акаунт: emilys / emilyspass</string>
     <string name="auth_error_empty">Обовʼязкове поле</string>
     <string name="auth_error_too_short">Щонайменше %1$d символи</string>
     <string name="auth_error_invalid_characters">Лише латинські літери, цифри та . _ -</string>
     <string name="auth_error_contains_spaces">Не може містити пробілів</string>
+    <string name="auth_error_invalid_credentials">Неправильне імʼя користувача або пароль</string>
+    <string name="auth_error_network">Немає звʼязку з сервером. Перевірте інтернет і спробуйте ще раз</string>
+    <string name="auth_error_server">Сервер зараз не відповідає. Спробуйте пізніше</string>
+    <string name="auth_error_session_expired">Сесія закінчилась. Увійдіть ще раз</string>
+    <string name="auth_error_unknown">Щось пішло не так. Спробуйте ще раз</string>
+
+    <!-- Home -->
+    <string name="home_greeting">Привіт, %1$s!</string>
+    <string name="home_subtitle">Ви увійшли в акаунт. Нові маршрути зовсім скоро.</string>
+    <string name="home_username">Імʼя користувача</string>
+    <string name="home_email">Email</string>
+    <string name="home_refresh">Оновити профіль</string>
+    <string name="home_logout">Вийти</string>
 
     <!-- Language -->
     <string name="language_switch_description">Мова додатка</string>

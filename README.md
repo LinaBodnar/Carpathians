@@ -63,6 +63,34 @@ UI (Screen) ──Intent──▶ ViewModel ──▶ UseCase ──▶ Reposito
 * Hero-екран з лабораторної №4 став основою екрана авторизації: той самий фон, ADVENTURE і хедер, плюс «скляна» форма входу (`.glass-login-modal` з дизайну).
 * Back stack і сховище ViewModel створюються поза `AppEnvironment`, тому зміна мови не скидає ні поточний екран, ні введені дані.
 
+## Лабораторна робота №6
+
+| Завдання | Де реалізовано |
+|---|---|
+| 1. Ktor | `ktor-client-core`, `content-negotiation`, `auth`, `logging`; рушії: OkHttp (Android, Desktop), JS/fetch (Web) |
+| 2. KSafe | `eu.anifantakis:ksafe`; екземпляр у `platformModule` (Android — з `Context`, Desktop/Web — з `appNamespace`) |
+| 3. Мережевий стек авторизації | DTO — [`data/auth/remote/AuthDtos.kt`](./shared/src/commonMain/kotlin/com/bodnar/carpathians/data/auth/remote/AuthDtos.kt); запити — [`AuthApi`](./shared/src/commonMain/kotlin/com/bodnar/carpathians/data/auth/remote/AuthApi.kt); репозиторій — [`AuthRepositoryImpl`](./shared/src/commonMain/kotlin/com/bodnar/carpathians/data/auth/AuthRepositoryImpl.kt); use case — [`domain/auth/AuthUseCases.kt`](./shared/src/commonMain/kotlin/com/bodnar/carpathians/domain/auth/AuthUseCases.kt) (`LoginUseCase`, `GetCurrentUserUseCase`, `IsUserLoggedInUseCase`, `LogoutUseCase`, `ObserveSessionExpiredUseCase`) |
+| 4. Безпечне збереження токенів | [`KSafeTokenStorage`](./shared/src/commonMain/kotlin/com/bodnar/carpathians/data/auth/local/KSafeTokenStorage.kt) — AES-256-GCM; ключ в Android Keystore / сховищі ОС / WebCrypto |
+| 5. Автоматичне оновлення токенів | [`HttpClientFactory.kt`](./shared/src/commonMain/kotlin/com/bodnar/carpathians/data/auth/remote/HttpClientFactory.kt): Ktor `Auth { bearer { refreshTokens { … } } }` |
+| 6. MVI екрана авторизації + use case | `AuthViewModel` викликає `LoginUseCase`; стан завантаження показується на кнопці «Увійти» |
+| 7. Обробка помилок, снекбар через події | `AuthError` (`InvalidCredentials`, `Network`, `Server`, `SessionExpired`, `Unknown`) → `AuthEffect.ShowError` → `AppSnackbarHost` |
+| 8. Домашня сторінка, перехід після входу | [`ui/home`](./shared/src/commonMain/kotlin/com/bodnar/carpathians/ui/home) — привітання, дані з `/auth/me`, «Оновити профіль», «Вийти» |
+| 9. Навігація з урахуванням авторизації | `MainViewModel`: онбординг не пройдено → `Onboarding`; є токени → `Home`; інакше → `Auth`. Якщо сесія закінчилась — повернення на `Auth` |
+
+### Як працює оновлення токенів
+1. Після входу (`POST /auth/login`) пара `accessToken` / `refreshToken` зашифровано зберігається через KSafe.
+2. Ktor додає `Authorization: Bearer <accessToken>` до захищених запитів (`/auth/me`).
+3. Access-токен живе **1 хвилину** (`expiresInMins = 1`), щоб оновлення було видно в логах.
+4. На відповідь `401` Ktor викликає `POST /auth/refresh`, зберігає нову пару токенів і **повторює** початковий запит. Для користувача це непомітно.
+5. Якщо refresh-токен недійсний, токени видаляються, `SessionEvents` надсилає подію, і застосунок повертає користувача на екран входу зі снекбаром «Сесія закінчилась».
+
+Демо-акаунт DummyJSON: **`emilys` / `emilyspass`**.
+
+### Тести
+`./gradlew :shared:jvmTest` (32 тести): use case'и, ViewModel'и (онбординг, вхід, домашня, головна), валідація, граф Koin,
+а також мережевий стек на `MockEngine`: успішний вхід, неправильний пароль, помилка сервера, відсутність мережі,
+автоматичне оновлення простроченого токена й завершення сесії, коли оновити не вдалося; збереження токенів у справжньому KSafe на JVM.
+
 ## Запуск
 
 - Android: `./gradlew :androidApp:assembleDebug`

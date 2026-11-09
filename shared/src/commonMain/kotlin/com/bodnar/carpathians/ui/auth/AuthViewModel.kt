@@ -1,13 +1,18 @@
 package com.bodnar.carpathians.ui.auth
 
+import androidx.lifecycle.viewModelScope
 import com.bodnar.carpathians.core.mvi.MviViewModel
+import com.bodnar.carpathians.domain.auth.AuthResult
+import com.bodnar.carpathians.domain.auth.LoginUseCase
 import com.bodnar.carpathians.domain.auth.validation.ValidatePasswordUseCase
 import com.bodnar.carpathians.domain.auth.validation.ValidateUsernameUseCase
 import com.bodnar.carpathians.logging.AppLogger
+import kotlinx.coroutines.launch
 
 class AuthViewModel(
     private val validateUsername: ValidateUsernameUseCase,
     private val validatePassword: ValidatePasswordUseCase,
+    private val login: LoginUseCase,
 ) : MviViewModel<AuthState, AuthIntent, AuthEffect>(AuthState()) {
 
     private val log = AppLogger.withTag("AuthVM")
@@ -45,9 +50,26 @@ class AuthViewModel(
         when {
             usernameError != null -> sendEffect(AuthEffect.FocusField(AuthField.Username))
             passwordError != null -> sendEffect(AuthEffect.FocusField(AuthField.Password))
-            else -> {
-                log.i { "Credentials are valid for '${currentState.username.trim()}'" }
-                sendEffect(AuthEffect.CredentialsAccepted)
+            else -> performLogin()
+        }
+    }
+
+    private fun performLogin() {
+        setState { copy(isLoading = true) }
+        viewModelScope.launch {
+            val result = login(currentState.username, currentState.password)
+            setState { copy(isLoading = false) }
+            when (result) {
+                is AuthResult.Success -> {
+                    log.i { "Signed in as ${result.data.username}" }
+                    setState { copy(password = "") }
+                    sendEffect(AuthEffect.NavigateToHome)
+                }
+
+                is AuthResult.Failure -> {
+                    log.w { "Sign in failed: ${result.error}" }
+                    sendEffect(AuthEffect.ShowError(result.error))
+                }
             }
         }
     }

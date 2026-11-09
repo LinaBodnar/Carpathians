@@ -12,6 +12,10 @@ import com.bodnar.carpathians.navigation.navSavedStateConfiguration
 import com.bodnar.carpathians.navigation.rememberAppViewModelDecorator
 import com.bodnar.carpathians.theme.CarpathiansBackground
 import com.bodnar.carpathians.theme.CarpathiansTheme
+import com.bodnar.carpathians.core.mvi.CollectEffects
+import com.bodnar.carpathians.navigation.Route
+import com.bodnar.carpathians.navigation.replaceAll
+import com.bodnar.carpathians.ui.main.MainEffect
 import com.bodnar.carpathians.ui.main.MainViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -29,6 +33,16 @@ fun App(mainViewModel: MainViewModel = koinViewModel()) {
             // (яка перебудовує UI) не скидала навігацію та стан екранів.
             val backStack: NavBackStack<NavKey> = rememberNavBackStack(navSavedStateConfiguration, startRoute)
             val viewModelDecorator = rememberAppViewModelDecorator()
+
+            // Сесія закінчилась (не вдалося оновити токени) — на екран входу
+            CollectEffects(mainViewModel.effects) { effect ->
+                when (effect) {
+                    MainEffect.NavigateToAuth -> if (backStack.lastOrNull() == Route.Home) {
+                        backStack.replaceAll(Route.Auth)
+                    }
+                }
+            }
+
             AppEnvironment {
                 AppNavDisplay(backStack, viewModelDecorator)
             }

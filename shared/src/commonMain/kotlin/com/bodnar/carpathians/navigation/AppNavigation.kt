@@ -10,6 +10,7 @@ import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import com.bodnar.carpathians.logging.AppLogger
 import com.bodnar.carpathians.ui.auth.AuthRoute
+import com.bodnar.carpathians.ui.home.HomeRoute
 import com.bodnar.carpathians.ui.onboarding.OnboardingRoute
 
 private val log = AppLogger.withTag("Navigation")
@@ -40,7 +41,10 @@ fun AppNavDisplay(
                 OnboardingRoute(onNavigateToAuth = { backStack.replaceAll(Route.Auth) })
             }
             entry<Route.Auth> {
-                AuthRoute()
+                AuthRoute(onNavigateToHome = { backStack.replaceAll(Route.Home) })
+            }
+            entry<Route.Home> {
+                HomeRoute(onNavigateToAuth = { backStack.replaceAll(Route.Auth) })
             }
         },
     )
@@ -48,6 +52,7 @@ fun AppNavDisplay(
 
 /** Замінює весь стек одним екраном (повернутися "назад" на попередній не можна). */
 fun NavBackStack<NavKey>.replaceAll(route: Route) {
+    if (size == 1 && lastOrNull() == route) return
     log.i { "Navigate: ${lastOrNull()} -> $route" }
     add(route)
     removeAll { it != route }

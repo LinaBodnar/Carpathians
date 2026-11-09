@@ -52,11 +52,24 @@
     <string name="auth_show_password">Show</string>
     <string name="auth_hide_password">Hide</string>
     <string name="auth_sign_in">Sign in</string>
-    <string name="auth_credentials_accepted">The username and password look good</string>
+    <string name="auth_demo_hint">Demo account: emilys / emilyspass</string>
     <string name="auth_error_empty">This field is required</string>
     <string name="auth_error_too_short">Must be at least %1$d characters</string>
     <string name="auth_error_invalid_characters">Use only Latin letters, digits and . _ -</string>
     <string name="auth_error_contains_spaces">Must not contain spaces</string>
+    <string name="auth_error_invalid_credentials">Wrong username or password</string>
+    <string name="auth_error_network">No connection to the server. Check your internet and try again</string>
+    <string name="auth_error_server">The server is not responding right now. Please try again later</string>
+    <string name="auth_error_session_expired">Your session has expired. Please sign in again</string>
+    <string name="auth_error_unknown">Something went wrong. Please try again</string>
+
+    <!-- Home -->
+    <string name="home_greeting">Hi, %1$s!</string>
+    <string name="home_subtitle">You are signed in. New routes are coming soon.</string>
+    <string name="home_username">Username</string>
+    <string name="home_email">Email</string>
+    <string name="home_refresh">Refresh profile</string>
+    <string name="home_logout">Sign out</string>
 
     <!-- Language -->
     <string name="language_switch_description">App language</string>
