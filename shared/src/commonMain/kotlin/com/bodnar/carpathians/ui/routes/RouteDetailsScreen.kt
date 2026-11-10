@@ -22,6 +22,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.layout.ContentScale
@@ -143,11 +145,13 @@ private fun RouteContent(route: HikingRoute, onIntent: (RouteDetailsIntent) -> U
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         item {
-            Image(
-                painter = painterResource(route.cover),
-                contentDescription = stringResource(route.name),
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.widthIn(max = 720.dp).fillMaxWidth().aspectRatio(16f / 9f),
+            RouteCover(
+                route,
+                Modifier
+                    .widthIn(max = 640.dp)
+                    .fillMaxWidth()
+                    .padding(start = 16.dp, end = 16.dp, top = 16.dp)
+                    .clip(CarpathiansShapes.Card),
             )
         }
         item {
@@ -195,16 +199,21 @@ private fun RoutePointItem(
     isLast: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    Row(modifier.height(IntrinsicSize.Min)) {
-        // Лінія таймлайну з точкою
-        Box(Modifier.width(24.dp).fillMaxHeight(), contentAlignment = Alignment.TopCenter) {
-            Box(
-                Modifier
-                    .width(2.dp)
-                    .fillMaxHeight()
-                    .padding(top = if (isFirst) 18.dp else 0.dp, bottom = if (isLast) 0.dp else 0.dp)
-                    .background(if (isLast) CarpathiansColors.GlassBorder else CarpathiansColors.PrimaryDark)
+    // Лінія таймлайну малюється на всю висоту рядка (від точки — для першої, до точки — для останньої)
+    val lineColor = CarpathiansColors.PrimaryDark
+    Row(
+        modifier.drawBehind {
+            val x = 12.dp.toPx()
+            val dotCenter = 19.dp.toPx()
+            drawLine(
+                color = lineColor,
+                start = Offset(x, if (isFirst) dotCenter else 0f),
+                end = Offset(x, if (isLast) dotCenter else size.height),
+                strokeWidth = 2.dp.toPx(),
             )
+        }
+    ) {
+        Box(Modifier.width(24.dp), contentAlignment = Alignment.TopCenter) {
             Box(
                 Modifier
                     .padding(top = 12.dp)

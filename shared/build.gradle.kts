@@ -49,6 +49,11 @@ kotlin {
         jvmMain.dependencies {
             implementation(libs.ktor.client.okhttp)
         }
+        jvmTest.dependencies {
+            // UI-тест усього застосунку на Desktop (кліки + знімки екранів)
+            implementation(compose.desktop.currentOs)
+            implementation(libs.compose.uiTest)
+        }
         webMain.dependencies {
             implementation(libs.ktor.client.js)
         }

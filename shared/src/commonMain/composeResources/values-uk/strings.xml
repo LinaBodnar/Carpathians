@@ -84,13 +84,14 @@
     <string name="auth_confirm_password">Повторіть пароль</string>
     <string name="auth_sign_up">Зареєструватися</string>
     <string name="auth_sign_up_hint">DummyJSON лише імітує реєстрацію</string>
-    <string name="auth_registered">Акаунт «%1$s» створено! DummyJSON — тестовий API і не зберігає нових користувачів, тож увійдіть демо-акаунтом</string>
+    <string name="auth_registered">Акаунт «%1$s» створено. Увійдіть демо-акаунтом: тестовий API DummyJSON не зберігає нових користувачів</string>
     <string name="auth_error_invalid_name">Лише літери</string>
     <string name="auth_error_invalid_email">Введіть коректний email, напр. name@mail.com</string>
     <string name="auth_error_passwords_do_not_match">Паролі не збігаються</string>
 
     <!-- Routes -->
     <string name="back">Назад</string>
+    <string name="snackbar_dismiss">Закрити</string>
     <string name="home_choose_route">ОБРАТИ МАРШРУТ</string>
     <string name="routes_title">Оберіть свій маршрут</string>
     <string name="routes_subtitle">Вісім маршрутів Українськими Карпатами. Оберіть маршрут, щоб побачити ключові точки та карту.</string>

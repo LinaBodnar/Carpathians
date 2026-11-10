@@ -122,7 +122,7 @@ fun OnboardingScreen(
                 .padding(horizontal = 16.dp, vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            BrandLogo(Modifier.weight(1f))
+            BrandLogo(Modifier.weight(1f).padding(end = 8.dp))
             topBarActions()
             AnimatedVisibility(visible = !isLastPage, enter = fadeIn(), exit = fadeOut()) {
                 TextButton(onClick = { onIntent(OnboardingIntent.SkipClicked) }) {

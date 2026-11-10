@@ -110,7 +110,7 @@ fun HomeScreen(
                     .padding(start = 16.dp, end = 4.dp, top = 8.dp, bottom = 8.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                BrandLogo(Modifier.weight(1f))
+                BrandLogo(Modifier.weight(1f).padding(end = 8.dp))
                 AppLanguageSwitcher()
                 TextButton(onClick = { onIntent(HomeIntent.Logout) }) {
                     Text(

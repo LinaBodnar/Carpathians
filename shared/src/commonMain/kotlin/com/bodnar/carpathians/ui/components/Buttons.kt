@@ -51,7 +51,7 @@ private fun ScalingButton(
     val interaction = remember { MutableInteractionSource() }
     val hovered by interaction.collectIsHoveredAsState()
     val pressed by interaction.collectIsPressedAsState()
-    val scale by animateFloatAsState(if (hovered || pressed) 1.05f else 1f)
+    val scale by animateFloatAsState(if (hovered || pressed) 1.03f else 1f)
 
     Box(
         modifier = modifier

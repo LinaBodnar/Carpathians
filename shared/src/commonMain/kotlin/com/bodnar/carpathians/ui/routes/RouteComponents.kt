@@ -3,7 +3,15 @@ package com.bodnar.carpathians.ui.routes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.layout.ContentScale
+import org.jetbrains.compose.resources.painterResource
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -53,5 +61,21 @@ fun RouteStats(route: HikingRoute, modifier: Modifier = Modifier) {
             )
         )
         GlassChip(text = stringResource(Res.string.route_altitude_m, route.maxAltitude), dotColor = CarpathiansColors.Info)
+    }
+}
+
+/**
+ * Обкладинка маршруту 16:9. Фото трохи збільшене й обрізане,
+ * щоб сховати нерівні краї вихідних зображень з дизайну.
+ */
+@Composable
+fun RouteCover(route: HikingRoute, modifier: Modifier = Modifier) {
+    Box(modifier.aspectRatio(16f / 9f).clipToBounds()) {
+        Image(
+            painter = painterResource(route.cover),
+            contentDescription = stringResource(route.name),
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.fillMaxSize().scale(1.04f),
+        )
     }
 }

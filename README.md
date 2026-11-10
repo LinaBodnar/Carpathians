@@ -33,8 +33,7 @@ REST API: другий варіант — відкритий тестовий AP
 
 ### Онбординг
 5 слайдів, що повторюють секції дизайну: Hero → Маршрути → Галерея → Спорядження → Запис у похід.
-Паралакс фото, анімований індикатор, кнопки «Пропустити» / «Далі» / «Почати». Після завершення відкривається головний екран (hero-секція),
-з якого онбординг можна переглянути знову.
+Паралакс фото, анімований індикатор, кнопки «Пропустити» / «Далі» / «Почати». Після завершення відкривається екран входу, а результат зберігається в налаштуваннях.
 
 ## Лабораторна робота №5
 
@@ -48,7 +47,7 @@ REST API: другий варіант — відкритий тестовий AP
 | 7–8. ViewModel головного екрана, вибір стартового екрана | [`ui/main/MainViewModel.kt`](./shared/src/commonMain/kotlin/com/bodnar/carpathians/ui/main/MainViewModel.kt) + `IsOnboardingCompletedUseCase`: онбординг не пройдено → `Onboarding`, інакше → `Auth` |
 | 9. Дизайн і MVI екрана авторизації | `AuthContract` / `AuthViewModel` |
 | 9a. Валідація | [`domain/auth/validation`](./shared/src/commonMain/kotlin/com/bodnar/carpathians/domain/auth/validation/CredentialsValidation.kt): імʼя — ≥ 3 символи, латиниця/цифри/`._-`; пароль — ≥ 6 символів, без пробілів |
-| 9b. Дії клавіатури | імʼя: `ImeAction.Next` → фокус на пароль; пароль: `ImeAction.Done` → `AuthIntent.SignIn` (як кнопка «Увійти») |
+| 9b. Дії клавіатури | імʼя: `ImeAction.Next` → фокус на пароль; пароль: `ImeAction.Done` → `AuthIntent.Submit` (та сама дія, що й кнопка «Увійти»). У формі реєстрації так само: «Далі» веде по полях, «Готово» на останньому = «Зареєструватися» |
 
 ### Архітектура
 ```
@@ -74,7 +73,7 @@ UI (Screen) ──Intent──▶ ViewModel ──▶ UseCase ──▶ Reposito
 | 5. Автоматичне оновлення токенів | [`HttpClientFactory.kt`](./shared/src/commonMain/kotlin/com/bodnar/carpathians/data/auth/remote/HttpClientFactory.kt): Ktor `Auth { bearer { refreshTokens { … } } }` |
 | 6. MVI екрана авторизації + use case | `AuthViewModel` викликає `LoginUseCase`; стан завантаження показується на кнопці «Увійти» |
 | 7. Обробка помилок, снекбар через події | `AuthError` (`InvalidCredentials`, `Network`, `Server`, `SessionExpired`, `Unknown`) → `AuthEffect.ShowError` → `AppSnackbarHost` |
-| 8. Домашня сторінка, перехід після входу | [`ui/home`](./shared/src/commonMain/kotlin/com/bodnar/carpathians/ui/home) — привітання, дані з `/auth/me`, «Оновити профіль», «Вийти» |
+| 8. Домашня сторінка, перехід після входу | [`ui/home`](./shared/src/commonMain/kotlin/com/bodnar/carpathians/ui/home) — привітання, дані з `/auth/me`, «ОБРАТИ МАРШРУТ», «Оновити профіль», «Вийти» |
 | 9. Навігація з урахуванням авторизації | `MainViewModel`: онбординг не пройдено → `Onboarding`; є токени → `Home`; інакше → `Auth`. Якщо сесія закінчилась — повернення на `Auth` |
 
 ### Як працює оновлення токенів
@@ -86,10 +85,31 @@ UI (Screen) ──Intent──▶ ViewModel ──▶ UseCase ──▶ Reposito
 
 Демо-акаунт DummyJSON: **`emilys` / `emilyspass`**.
 
+## Що вміє застосунок
+
+Шлях користувача: **онбординг → вхід / реєстрація → головна → маршрути → деталі маршруту → запис у похід**.
+
+| Екран | Що працює |
+|---|---|
+| Онбординг | 5 слайдів (Pager), «Далі», «Пропустити», «Почати», перемикач мови |
+| Вхід / Реєстрація | вкладки як у дизайні (`.glass-login-modal`); вхід через `POST /auth/login`, реєстрація через `POST /users/add`; валідація всіх полів |
+| Головна | профіль з `/auth/me`, «ОБРАТИ МАРШРУТ», «Оновити профіль», «Вийти» |
+| Маршрути | 8 маршрутів з дизайну, фільтр за складністю ([`ui/routes`](./shared/src/commonMain/kotlin/com/bodnar/carpathians/ui/routes)) |
+| Деталі маршруту | складність, довжина, тривалість, найвища точка, ключові точки з фото; «ВІДКРИТИ КАРТУ» відкриває mapy.cz |
+| Запис у похід | форма з дизайну (імʼя, телефон, кількість осіб) з валідацією та підтвердженням |
+
+* **Реєстрація.** DummyJSON — тестовий API: `/users/add` повертає створеного користувача, але не зберігає його, тому увійти новим акаунтом не можна. Після реєстрації застосунок повертає на вкладку входу й чесно про це повідомляє.
+* **Маршрути** зберігаються локально ([`RoutesRepositoryImpl`](./shared/src/commonMain/kotlin/com/bodnar/carpathians/data/routes/RoutesRepositoryImpl.kt)), бо в DummyJSON таких даних немає. Вони йдуть через той самий ланцюжок `Repository → UseCase → ViewModel (MVI)`.
+* **Адаптивність.** [`FitText`](./shared/src/commonMain/kotlin/com/bodnar/carpathians/ui/components/FitText.kt) тримає заголовки, кнопки й логотип в одному рядку: на вузькому екрані шрифт зменшується, а не переноситься. Контент обмежено по ширині, тож на широкому вікні він не розтягується.
+
 ### Тести
-`./gradlew :shared:jvmTest` (32 тести): use case'и, ViewModel'и (онбординг, вхід, домашня, головна), валідація, граф Koin,
-а також мережевий стек на `MockEngine`: успішний вхід, неправильний пароль, помилка сервера, відсутність мережі,
-автоматичне оновлення простроченого токена й завершення сесії, коли оновити не вдалося; збереження токенів у справжньому KSafe на JVM.
+`./gradlew :shared:jvmTest` (42 тести):
+* use case'и, ViewModel'и всіх екранів, валідація, граф Koin;
+* мережевий стек на `MockEngine`: успішний вхід, неправильний пароль, помилка сервера, відсутність мережі,
+  автоматичне оновлення простроченого токена, завершення сесії, коли оновити не вдалося;
+* збереження токенів у справжньому KSafe на JVM;
+* [`AppFlowUiTest`](./shared/src/jvmTest/kotlin/com/bodnar/carpathians/AppFlowUiTest.kt) — наскрізний UI-тест: проходить увесь застосунок кліками
+  на ширині 320, 360 і 1000 та зберігає знімки кожного кроку в `shared/build/screenshots`.
 
 ## Запуск
 

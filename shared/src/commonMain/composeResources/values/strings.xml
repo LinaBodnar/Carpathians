@@ -84,13 +84,14 @@
     <string name="auth_confirm_password">Repeat password</string>
     <string name="auth_sign_up">Sign up</string>
     <string name="auth_sign_up_hint">DummyJSON only simulates registration</string>
-    <string name="auth_registered">Account “%1$s” created! DummyJSON is a test API and does not keep new users, so sign in with the demo account</string>
+    <string name="auth_registered">Account “%1$s” created. Sign in with the demo account: the DummyJSON test API does not keep new users</string>
     <string name="auth_error_invalid_name">Use letters only</string>
     <string name="auth_error_invalid_email">Enter a valid email, e.g. name@mail.com</string>
     <string name="auth_error_passwords_do_not_match">Passwords do not match</string>
 
     <!-- Routes -->
     <string name="back">Back</string>
+    <string name="snackbar_dismiss">Dismiss</string>
     <string name="home_choose_route">CHOOSE A ROUTE</string>
     <string name="routes_title">Choose your route</string>
     <string name="routes_subtitle">Eight routes across the Ukrainian Carpathians. Tap a route to see its key points and the map.</string>

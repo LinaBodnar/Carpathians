@@ -154,12 +154,7 @@ private fun RouteCard(
             .border(1.dp, CarpathiansColors.GlassBorder, CarpathiansShapes.Card)
             .clickable(role = Role.Button, onClick = onClick),
     ) {
-        Image(
-            painter = painterResource(route.cover),
-            contentDescription = stringResource(route.name),
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxWidth().aspectRatio(16f / 9f),
-        )
+        RouteCover(route, Modifier.fillMaxWidth())
         Column(Modifier.padding(horizontal = 14.dp, vertical = 12.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 FitText(

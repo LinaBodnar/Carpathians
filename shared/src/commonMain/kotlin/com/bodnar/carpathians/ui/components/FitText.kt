@@ -1,6 +1,7 @@
 package com.bodnar.carpathians.ui.components
 
 import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -54,8 +55,12 @@ fun FitText(
             }
             size.coerceAtLeast(minFontSize.value).sp
         }
+        // Для вирівнювання по центру / праворуч текст має зайняти всю доступну ширину
+        val aligned = (textAlign == TextAlign.Center || textAlign == TextAlign.End) &&
+            maxWidth != Constraints.Infinity
         BasicText(
             text = text,
+            modifier = if (aligned) Modifier.fillMaxWidth() else Modifier,
             style = baseStyle.copy(fontSize = fontSize),
             maxLines = 1,
             softWrap = false,
