@@ -42,6 +42,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import carpathians.shared.generated.resources.*
 import com.bodnar.carpathians.core.mvi.CollectEffects
+import com.bodnar.carpathians.ui.adaptive.ScreenLayout
+import com.bodnar.carpathians.ui.adaptive.currentScreenLayout
 import com.bodnar.carpathians.domain.auth.validation.ValidationError
 import com.bodnar.carpathians.theme.CarpathiansColors
 import com.bodnar.carpathians.theme.CarpathiansShapes
@@ -85,23 +87,33 @@ fun AuthRoute(
         state = state,
         onIntent = viewModel::onIntent,
         snackbarHostState = snackbarHostState,
+        layout = currentScreenLayout(),
         focusRequesters = focusRequesters,
     )
 }
 
-/** Екран входу / реєстрації: hero-секція дизайну + "скляна" форма (.glass-login-modal). */
 @Composable
 fun AuthScreen(
     state: AuthState,
     onIntent: (AuthIntent) -> Unit,
     snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
+    layout: ScreenLayout = ScreenLayout.Compact,
     focusRequesters: Map<AuthField, FocusRequester> = remember { AuthField.entries.associateWith { FocusRequester() } },
 ) {
     val focusManager = LocalFocusManager.current
     val submit = {
         focusManager.clearFocus()
         onIntent(AuthIntent.Submit)
+    }
+    val form: @Composable (Modifier) -> Unit = { formModifier ->
+        AuthFormPanel(
+            state = state,
+            onIntent = onIntent,
+            focusRequesters = focusRequesters,
+            onSubmit = submit,
+            modifier = formModifier,
+        )
     }
 
     Box(modifier.fillMaxSize().background(CarpathiansColors.BackgroundBottom)) {
@@ -122,117 +134,75 @@ fun AuthScreen(
         )
 
         Column(Modifier.fillMaxSize()) {
-            // Header (.main-header): чорний 70% фон
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(CarpathiansColors.OverlayStrong)
                     .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal))
-                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                    .padding(horizontal = if (layout == ScreenLayout.Compact) 16.dp else 32.dp, vertical = 12.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 BrandLogo(Modifier.weight(1f).padding(end = 8.dp))
                 AppLanguageSwitcher()
             }
 
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth()
-                    .verticalScroll(rememberScrollState())
-                    .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal))
-                    .imePadding()
-                    .padding(horizontal = 20.dp, vertical = 24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                AdventureTitle(fontSize = 52)
-                FitText(
-                    text = stringResource(Res.string.hero_subtitle),
-                    style = MaterialTheme.typography.titleLarge.copy(shadow = TextShadow),
-                    color = CarpathiansColors.White,
-                    minFontSize = 14.sp,
-                )
-                Spacer(Modifier.height(24.dp))
+            val contentInsets = Modifier
+                .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal))
+                .imePadding()
 
-                GlassPanel(Modifier.widthIn(max = 440.dp).fillMaxWidth().animateContentSize()) {
-                    Column(Modifier.fillMaxWidth()) {
-                        AuthModeTabs(
-                            selected = state.mode,
-                            enabled = !state.isLoading,
-                            onSelect = { onIntent(AuthIntent.ModeChanged(it)) },
-                        )
-                        Spacer(Modifier.height(18.dp))
-                        FitText(
-                            text = stringResource(
-                                if (state.mode == AuthMode.SignIn) Res.string.auth_title else Res.string.auth_sign_up_title
-                            ),
-                            style = MaterialTheme.typography.headlineMedium,
-                            color = CarpathiansColors.White,
-                            minFontSize = 18.sp,
-                        )
-                        Spacer(Modifier.height(4.dp))
-                        Text(
-                            text = stringResource(
-                                if (state.mode == AuthMode.SignIn) Res.string.auth_subtitle else Res.string.auth_sign_up_subtitle
-                            ),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = CarpathiansColors.TextPleasant,
-                        )
-                        Spacer(Modifier.height(16.dp))
-
-                        // Кожне поле: дія клавіатури "Далі" переводить фокус на наступне,
-                        // на останньому полі "Готово" = кнопка "Увійти" / "Зареєструватися".
-                        val fields = state.fields
-                        fields.forEachIndexed { index, field ->
-                            val isLast = index == fields.lastIndex
-                            AuthTextField(
-                                field = field,
-                                value = state.value(field),
-                                onValueChange = { onIntent(AuthIntent.FieldChanged(field, it)) },
-                                error = state.errors[field],
-                                enabled = !state.isLoading,
-                                isPasswordVisible = state.isPasswordVisible,
-                                onTogglePassword = { onIntent(AuthIntent.TogglePasswordVisibility) },
-                                imeAction = if (isLast) ImeAction.Done else ImeAction.Next,
-                                keyboardActions = KeyboardActions(
-                                    onNext = { focusRequesters.getValue(fields[index + 1]).requestFocus() },
-                                    onDone = { submit() },
-                                ),
-                                modifier = Modifier.focusRequester(focusRequesters.getValue(field)),
-                            )
-                            Spacer(Modifier.height(10.dp))
-                        }
-                        Spacer(Modifier.height(12.dp))
-
-                        GradientButton(
-                            text = stringResource(
-                                if (state.mode == AuthMode.SignIn) Res.string.auth_sign_in else Res.string.auth_sign_up
-                            ),
-                            onClick = submit,
-                            large = true,
-                            loading = state.isLoading,
-                            modifier = Modifier.fillMaxWidth(),
-                        )
-                        Spacer(Modifier.height(12.dp))
-                        Text(
-                            text = stringResource(
-                                if (state.mode == AuthMode.SignIn) Res.string.auth_demo_hint else Res.string.auth_sign_up_hint
-                            ),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = CarpathiansColors.TextMuted,
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.fillMaxWidth(),
-                        )
+            when (layout) {
+                ScreenLayout.Expanded -> Row(
+                    modifier = Modifier.weight(1f).fillMaxWidth().then(contentInsets),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    AuthHero(
+                        titleSize = 72,
+                        showQuote = true,
+                        modifier = Modifier.weight(1f).padding(horizontal = 40.dp),
+                    )
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight()
+                            .verticalScroll(rememberScrollState())
+                            .padding(horizontal = 40.dp, vertical = 24.dp),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        form(Modifier.widthIn(max = 460.dp).fillMaxWidth())
                     }
                 }
 
-                Spacer(Modifier.height(24.dp))
-                Text(
-                    text = stringResource(Res.string.hero_quote),
-                    style = MaterialTheme.typography.bodyMedium.copy(fontStyle = FontStyle.Italic),
-                    color = CarpathiansColors.TextPleasant,
-                    textAlign = TextAlign.Center,
-                )
+                ScreenLayout.Medium -> Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth()
+                        .verticalScroll(rememberScrollState())
+                        .then(contentInsets)
+                        .padding(horizontal = 48.dp, vertical = 40.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    AuthHero(titleSize = 68, showQuote = false)
+                    Spacer(Modifier.height(32.dp))
+                    form(Modifier.widthIn(max = 500.dp).fillMaxWidth())
+                    Spacer(Modifier.height(32.dp))
+                    HeroQuote()
+                }
+
+                ScreenLayout.Compact -> Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth()
+                        .verticalScroll(rememberScrollState())
+                        .then(contentInsets)
+                        .padding(horizontal = 20.dp, vertical = 24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    AuthHero(titleSize = 52, showQuote = false)
+                    Spacer(Modifier.height(24.dp))
+                    form(Modifier.fillMaxWidth())
+                    Spacer(Modifier.height(24.dp))
+                    HeroQuote()
+                }
             }
         }
 
@@ -247,7 +217,119 @@ fun AuthScreen(
     }
 }
 
-/** Перемикач вкладок "Вхід" / "Реєстрація" (.nav-pills з дизайну). */
+@Composable
+private fun AuthHero(
+    titleSize: Int,
+    showQuote: Boolean,
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier, horizontalAlignment = Alignment.CenterHorizontally) {
+        AdventureTitle(fontSize = titleSize)
+        FitText(
+            text = stringResource(Res.string.hero_subtitle),
+            style = MaterialTheme.typography.titleLarge.copy(
+                shadow = TextShadow,
+                fontSize = if (titleSize >= 64) 26.sp else 22.sp,
+            ),
+            color = CarpathiansColors.White,
+            minFontSize = 14.sp,
+        )
+        if (showQuote) {
+            Spacer(Modifier.height(28.dp))
+            HeroQuote()
+        }
+    }
+}
+
+@Composable
+private fun HeroQuote() {
+    Text(
+        text = stringResource(Res.string.hero_quote),
+        style = MaterialTheme.typography.bodyMedium.copy(fontStyle = FontStyle.Italic),
+        color = CarpathiansColors.TextPleasant,
+        textAlign = TextAlign.Center,
+    )
+}
+
+@Composable
+private fun AuthFormPanel(
+    state: AuthState,
+    onIntent: (AuthIntent) -> Unit,
+    focusRequesters: Map<AuthField, FocusRequester>,
+    onSubmit: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    GlassPanel(modifier.animateContentSize()) {
+        Column(Modifier.fillMaxWidth()) {
+            AuthModeTabs(
+                selected = state.mode,
+                enabled = !state.isLoading,
+                onSelect = { onIntent(AuthIntent.ModeChanged(it)) },
+            )
+            Spacer(Modifier.height(18.dp))
+            FitText(
+                text = stringResource(
+                    if (state.mode == AuthMode.SignIn) Res.string.auth_title else Res.string.auth_sign_up_title
+                ),
+                style = MaterialTheme.typography.headlineMedium,
+                color = CarpathiansColors.White,
+                minFontSize = 18.sp,
+            )
+            Spacer(Modifier.height(4.dp))
+            Text(
+                text = stringResource(
+                    if (state.mode == AuthMode.SignIn) Res.string.auth_subtitle else Res.string.auth_sign_up_subtitle
+                ),
+                style = MaterialTheme.typography.bodyMedium,
+                color = CarpathiansColors.TextPleasant,
+            )
+            Spacer(Modifier.height(16.dp))
+
+            val fields = state.fields
+            fields.forEachIndexed { index, field ->
+                val isLast = index == fields.lastIndex
+                AuthTextField(
+                    field = field,
+                    value = state.value(field),
+                    onValueChange = { onIntent(AuthIntent.FieldChanged(field, it)) },
+                    error = state.errors[field],
+                    enabled = !state.isLoading,
+                    isPasswordVisible = state.isPasswordVisible,
+                    onTogglePassword = { onIntent(AuthIntent.TogglePasswordVisibility) },
+                    imeAction = if (isLast) ImeAction.Done else ImeAction.Next,
+                    keyboardActions = KeyboardActions(
+                        onNext = { focusRequesters.getValue(fields[index + 1]).requestFocus() },
+                        onDone = { onSubmit() },
+                    ),
+                    modifier = Modifier.focusRequester(focusRequesters.getValue(field)),
+                )
+                Spacer(Modifier.height(10.dp))
+            }
+            Spacer(Modifier.height(12.dp))
+
+            GradientButton(
+                text = stringResource(
+                    if (state.mode == AuthMode.SignIn) Res.string.auth_sign_in else Res.string.auth_sign_up
+                ),
+                onClick = onSubmit,
+                large = true,
+                loading = state.isLoading,
+                modifier = Modifier.fillMaxWidth(),
+            )
+            Spacer(Modifier.height(12.dp))
+            Text(
+                text = stringResource(
+                    if (state.mode == AuthMode.SignIn) Res.string.auth_demo_hint else Res.string.auth_sign_up_hint
+                ),
+                style = MaterialTheme.typography.bodySmall,
+                color = CarpathiansColors.TextMuted,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
+    }
+}
+
 @Composable
 private fun AuthModeTabs(
     selected: AuthMode,

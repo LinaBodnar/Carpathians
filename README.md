@@ -85,6 +85,31 @@ UI (Screen) ──Intent──▶ ViewModel ──▶ UseCase ──▶ Reposito
 
 Демо-акаунт DummyJSON: **`emilys` / `emilyspass`**.
 
+## Лабораторна робота №7
+
+Адаптивна розмітка екранів онбордингу та логіну за допомогою **WindowSizeClass**.
+
+| Завдання | Де реалізовано |
+|---|---|
+| WindowSizeClass | бібліотека `material3-adaptive`: `currentWindowAdaptiveInfo().windowSizeClass`; визначення розмітки — [`ui/adaptive/ScreenLayout.kt`](./shared/src/commonMain/kotlin/com/bodnar/carpathians/ui/adaptive/ScreenLayout.kt) |
+| a. Онбординг | [`ui/onboarding/OnboardingScreen.kt`](./shared/src/commonMain/kotlin/com/bodnar/carpathians/ui/onboarding/OnboardingScreen.kt): `OnboardingStacked` і `OnboardingTwoPane` |
+| b. Логін | [`ui/auth/AuthScreen.kt`](./shared/src/commonMain/kotlin/com/bodnar/carpathians/ui/auth/AuthScreen.kt): `when (layout)` з трьома варіантами |
+
+### Як обирається розмітка
+`WindowSizeClass` ділить вікно на класи за шириною (межі 600 і 840 dp) і висотою (межа 480 dp).
+Функція `toScreenLayout()` перетворює його на один з трьох варіантів:
+
+| Розмітка | Коли | Онбординг | Логін |
+|---|---|---|---|
+| `Compact` | ширина < 600 dp (телефон вертикально) | фото на весь екран, текст знизу | одна колонка: заголовок, форма, цитата |
+| `Medium` | ширина 600–839 dp (планшет вертикально) | те саме, але більші шрифти й відступи | одна колонка, більший заголовок, ширша форма |
+| `Expanded` | ширина ≥ 840 dp **або** ширина ≥ 600 dp при висоті < 480 dp (телефон горизонтально) | дві панелі: фото зліва, текст і кнопки справа | дві панелі: заголовок зліва, форма справа |
+
+* Екрани не читають розмір вікна самі: `XxxRoute` викликає `currentScreenLayout()` і передає результат у stateless `XxxScreen(layout = …)`. Логіка (ViewModel, State, Intent) для всіх розміток одна.
+* Частини екрана винесені в окремі функції (`OnboardingPageText`, `OnboardingControls`, `AuthFormPanel`, `AuthHero`), тому різні розмітки лише по-різному їх розставляють і код не дублюється.
+* Телефон у горизонтальній орієнтації теж отримує дві панелі: інакше форма не вміщується по висоті.
+* Тести: `ScreenLayoutTest` перевіряє межі класів, `AppFlowUiTest` проходить застосунок на розмірах 320×640, 360×760, 700×1000, 800×400 і 1000×720.
+
 ## Що вміє застосунок
 
 Шлях користувача: **онбординг → вхід / реєстрація → головна → маршрути → деталі маршруту → запис у похід**.
@@ -103,13 +128,13 @@ UI (Screen) ──Intent──▶ ViewModel ──▶ UseCase ──▶ Reposito
 * **Адаптивність.** [`FitText`](./shared/src/commonMain/kotlin/com/bodnar/carpathians/ui/components/FitText.kt) тримає заголовки, кнопки й логотип в одному рядку: на вузькому екрані шрифт зменшується, а не переноситься. Контент обмежено по ширині, тож на широкому вікні він не розтягується.
 
 ### Тести
-`./gradlew :shared:jvmTest` (42 тести):
+`./gradlew :shared:jvmTest` (48 тестів):
 * use case'и, ViewModel'и всіх екранів, валідація, граф Koin;
 * мережевий стек на `MockEngine`: успішний вхід, неправильний пароль, помилка сервера, відсутність мережі,
   автоматичне оновлення простроченого токена, завершення сесії, коли оновити не вдалося;
 * збереження токенів у справжньому KSafe на JVM;
 * [`AppFlowUiTest`](./shared/src/jvmTest/kotlin/com/bodnar/carpathians/AppFlowUiTest.kt) — наскрізний UI-тест: проходить увесь застосунок кліками
-  на ширині 320, 360 і 1000 та зберігає знімки кожного кроку в `shared/build/screenshots`.
+  на п'яти розмірах екрана (телефон, планшет, горизонтальний телефон, широке вікно) та зберігає знімки кожного кроку в `shared/build/screenshots`.
 
 ## Запуск
 

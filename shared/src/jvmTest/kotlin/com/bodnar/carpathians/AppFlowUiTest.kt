@@ -49,9 +49,15 @@ class AppFlowUiTest {
     fun phone() = runFlow("360", width = 360, height = 760)
 
     @Test
+    fun tabletPortrait() = runFlow("700-tablet", width = 700, height = 1000)
+
+    @Test
+    fun phoneLandscape() = runFlow("800x400-landscape", width = 800, height = 400, openRouteDetails = false)
+
+    @Test
     fun desktopWindow() = runFlow("1000", width = 1000, height = 720)
 
-    private fun runFlow(name: String, width: Int, height: Int) {
+    private fun runFlow(name: String, width: Int, height: Int, openRouteDetails: Boolean = true) {
         Dispatchers.setMain(UnconfinedTestDispatcher())
         startKoin {
             allowOverride(true)
@@ -67,7 +73,7 @@ class AppFlowUiTest {
         try {
             runDesktopComposeUiTest(width = width, height = height) {
                 setContent { App() }
-                flow(name)
+                flow(name, openRouteDetails)
             }
         } finally {
             stopKoin()
@@ -75,7 +81,7 @@ class AppFlowUiTest {
         }
     }
 
-    private fun ComposeUiTest.flow(name: String) {
+    private fun ComposeUiTest.flow(name: String, openRouteDetails: Boolean) {
         // 1. Онбординг
         onNodeWithText("Ласкаво просимо в Карпати").assertIsDisplayed()
         shot(name, "01-onboarding")
@@ -121,6 +127,7 @@ class AppFlowUiTest {
         onNodeWithText("Легкий").performClick()
         waitUntilText("КУКУЛ")
         shot(name, "09-routes-easy")
+        if (!openRouteDetails) return
         onNodeWithText("КУКУЛ").performClick()
 
         // 6. Деталі маршруту

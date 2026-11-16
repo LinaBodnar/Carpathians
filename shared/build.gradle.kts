@@ -92,6 +92,8 @@ kotlin {
 
             // Безпечне (зашифроване) сховище токенів
             implementation(libs.ksafe)
+
+            implementation(libs.material3.adaptive)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
