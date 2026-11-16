@@ -14,11 +14,6 @@ import carpathians.shared.generated.resources.playfair_display_bold
 import carpathians.shared.generated.resources.playfair_display_regular
 import org.jetbrains.compose.resources.Font
 
-/**
- * DM Serif Text — фірмовий шрифт дизайну ("ADVENTURE", логотип).
- * Він містить лише латиницю, тому для заголовків українською
- * використовується Playfair Display — близький за характером serif з кирилицею.
- */
 @Composable
 fun brandFontFamily(): FontFamily = FontFamily(
     Font(Res.font.dm_serif_text_regular, FontWeight.Normal),
@@ -30,7 +25,6 @@ fun serifFontFamily(): FontFamily = FontFamily(
     Font(Res.font.playfair_display_bold, FontWeight.Bold),
 )
 
-/** Arimo — метрично сумісний з Arial (--font-sans у дизайні), з кирилицею. */
 @Composable
 fun sansFontFamily(): FontFamily = FontFamily(
     Font(Res.font.arimo_regular, FontWeight.Normal),

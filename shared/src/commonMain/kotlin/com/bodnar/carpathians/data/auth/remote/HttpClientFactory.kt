@@ -34,16 +34,6 @@ val AppJson = Json {
     explicitNulls = false
 }
 
-/**
- * HTTP-клієнт застосунку:
- *  - JSON (kotlinx.serialization), базова адреса DummyJSON, тайм-аути;
- *  - Bearer-авторизація: access-токен береться з [TokenStorage] і додається до запитів;
- *  - автоматичне оновлення токенів: на відповідь 401 клієнт викликає /auth/refresh,
- *    зберігає нову пару токенів і повторює початковий запит;
- *  - якщо оновити не вдалося, сесія очищається і надсилається подія [SessionEvents.expired].
- *
- * @param engine рушій (null — платформний за замовчуванням: OkHttp або fetch у браузері)
- */
 fun createHttpClient(
     tokenStorage: TokenStorage,
     sessionEvents: SessionEvents,
@@ -99,7 +89,6 @@ fun createHttpClient(
                     }
                 }
 
-                // Токен не надсилається у запитах входу, реєстрації та оновлення
                 sendWithoutRequest { request ->
                     val path = request.url.pathSegments.joinToString("/")
                     listOf(AuthApi.LOGIN_PATH, AuthApi.REFRESH_PATH, AuthApi.REGISTER_PATH)
@@ -116,7 +105,6 @@ fun createHttpClient(
     return if (engine != null) HttpClient(engine, config) else HttpClient(config)
 }
 
-/** Скидає закешовані в Ktor токени (після входу або виходу). */
 fun HttpClient.clearCachedTokens() {
     authProvider<BearerAuthProvider>()?.clearToken()
 }

@@ -4,10 +4,6 @@ import co.touchlab.kermit.Logger
 import co.touchlab.kermit.Severity
 import com.bodnar.carpathians.getPlatform
 
-/**
- * Обгортка над Kermit. Kermit сам обирає платформний вивід:
- * Logcat на Android, System.out на Desktop, console у браузері.
- */
 object AppLogger {
     private const val APP_TAG = "Carpathians"
     private var initialized = false

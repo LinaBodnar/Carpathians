@@ -60,10 +60,7 @@ class AuthRepositoryImpl(
         log.i { "Logged out" }
     }
 
-    /**
-     * Виконує запит і перетворює винятки Ktor на [AuthError].
-     * Для запитів з токеном 401 означає, що навіть після оновлення токенів доступу немає.
-     */
+
     private suspend fun <T> safeCall(
         isAuthorizedCall: Boolean = false,
         block: suspend () -> T,
@@ -92,7 +89,6 @@ class AuthRepositoryImpl(
         }
         is ServerResponseException -> AuthError.Server
         is SerializationException -> AuthError.Unknown
-        // Обрив зʼєднання, тайм-аут, відсутність мережі (IOException, помилка fetch у браузері)
         else -> AuthError.Network
     }
 }

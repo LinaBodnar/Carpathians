@@ -17,15 +17,9 @@ import com.bodnar.carpathians.ui.onboarding.OnboardingRoute
 
 private val log = AppLogger.withTag("Navigation")
 
-/**
- * Декоратор, що дає кожному екрану власне сховище ViewModel
- * (очищається, коли екран прибрано зі стеку). Створюється вище за AppEnvironment,
- * щоб зміна мови не скидала ViewModel і введені дані.
- */
 @Composable
 fun rememberAppViewModelDecorator(): NavEntryDecorator<NavKey> = rememberViewModelStoreNavEntryDecorator()
 
-/** Граф навігації застосунку на Navigation 3. */
 @Composable
 fun AppNavDisplay(
     backStack: NavBackStack<NavKey>,
@@ -64,19 +58,16 @@ fun AppNavDisplay(
     )
 }
 
-/** Відкриває екран поверх поточного (з можливістю повернутися "назад"). */
 fun NavBackStack<NavKey>.navigate(route: Route) {
     if (lastOrNull() == route) return
     log.i { "Navigate: ${lastOrNull()} -> $route" }
     add(route)
 }
 
-/** Повертає на попередній екран (останній екран у стеку не прибирається). */
 fun NavBackStack<NavKey>.goBack() {
     if (size > 1) removeAt(lastIndex)
 }
 
-/** Замінює весь стек одним екраном (повернутися "назад" на попередній не можна). */
 fun NavBackStack<NavKey>.replaceAll(route: Route) {
     if (size == 1 && lastOrNull() == route) return
     log.i { "Navigate: ${lastOrNull()} -> $route" }

@@ -4,7 +4,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Shapes
 import androidx.compose.ui.unit.dp
 
-/** Радіуси заокруглень з дизайну. */
 object CarpathiansShapes {
     val Panel = RoundedCornerShape(24.dp)       // .glass-panel
     val Modal = RoundedCornerShape(20.dp)       // .glass-login-modal, .footer-box

@@ -6,7 +6,6 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 
-/** Екрани застосунку (ключі Navigation 3). */
 @Serializable
 sealed interface Route : NavKey {
     @Serializable
@@ -25,14 +24,9 @@ sealed interface Route : NavKey {
     data class RouteDetails(val routeId: String) : Route
 }
 
-/** Екрани, доступні лише авторизованому користувачу. */
 val Route.requiresAuth: Boolean
     get() = this is Route.Home || this is Route.Routes || this is Route.RouteDetails
 
-/**
- * Конфігурація збереження back stack. На не-Android платформах Navigation 3
- * потребує явної реєстрації всіх реалізацій [NavKey] для серіалізації.
- */
 val navSavedStateConfiguration = SavedStateConfiguration {
     serializersModule = SerializersModule {
         polymorphic(NavKey::class) {

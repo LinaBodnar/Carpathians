@@ -15,7 +15,6 @@ import com.bodnar.carpathians.domain.auth.validation.ValidationError
 import com.bodnar.carpathians.logging.AppLogger
 import kotlinx.coroutines.launch
 
-/** Набір валідаторів форми (щоб не тягнути п'ять параметрів у конструктор). */
 class AuthValidators(
     val username: ValidateUsernameUseCase = ValidateUsernameUseCase(),
     val password: ValidatePasswordUseCase = ValidatePasswordUseCase(),
@@ -51,7 +50,6 @@ class AuthViewModel(
         }
     }
 
-    /** Перевіряє лише поля поточної вкладки. */
     private fun validate(state: AuthState): Map<AuthField, ValidationError> = buildMap {
         state.fields.forEach { field ->
             val value = state.value(field)
@@ -119,7 +117,6 @@ class AuthViewModel(
             when (result) {
                 is AuthResult.Success -> {
                     log.i { "Registered ${result.data.username}" }
-                    // Повертаємося на вкладку входу з уже введеним іменем користувача
                     setState {
                         copy(
                             mode = AuthMode.SignIn,

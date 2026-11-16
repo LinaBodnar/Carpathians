@@ -4,7 +4,6 @@ import com.bodnar.carpathians.domain.auth.AuthTokens
 import com.bodnar.carpathians.domain.auth.User
 import kotlinx.serialization.Serializable
 
-/** POST /auth/login */
 @Serializable
 data class LoginRequestDto(
     val username: String,
@@ -12,7 +11,6 @@ data class LoginRequestDto(
     val expiresInMins: Int,
 )
 
-/** Відповідь /auth/login: дані користувача + токени. */
 @Serializable
 data class LoginResponseDto(
     val id: Int,
@@ -24,7 +22,6 @@ data class LoginResponseDto(
     val refreshToken: String,
 )
 
-/** POST /auth/refresh */
 @Serializable
 data class RefreshRequestDto(
     val refreshToken: String,
@@ -37,7 +34,6 @@ data class TokensDto(
     val refreshToken: String,
 )
 
-/** POST /users/add — реєстрація (DummyJSON імітує створення користувача). */
 @Serializable
 data class RegisterRequestDto(
     val firstName: String,
@@ -46,7 +42,6 @@ data class RegisterRequestDto(
     val password: String,
 )
 
-/** GET /auth/me */
 @Serializable
 data class UserDto(
     val id: Int,
@@ -56,7 +51,6 @@ data class UserDto(
     val lastName: String = "",
 )
 
-/** Тіло помилки DummyJSON: {"message": "..."} */
 @Serializable
 data class ErrorDto(val message: String = "")
 

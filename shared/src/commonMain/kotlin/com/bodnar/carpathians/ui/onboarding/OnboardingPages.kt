@@ -6,13 +6,11 @@ import com.bodnar.carpathians.theme.CarpathiansColors
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
 
-/** Чіп на слайді: текст + необов'язкова кольорова позначка. */
 data class OnboardingChip(
     val text: StringResource,
     val dotColor: Color? = null,
 )
 
-/** Опис одного слайда екрана знайомства. */
 data class OnboardingPage(
     val image: DrawableResource,
     val title: StringResource,
@@ -21,7 +19,6 @@ data class OnboardingPage(
     val showAdventureTitle: Boolean = false,
 )
 
-/** 5 слайдів, що повторюють секції дизайну: Hero, Маршрути, Галерея, Спорядження, Запис. */
 val onboardingPages: List<OnboardingPage> = listOf(
     OnboardingPage(
         image = Res.drawable.onboarding_welcome,

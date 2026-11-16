@@ -13,12 +13,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 
-/**
- * Базова ViewModel для MVI:
- *  - [State]  — незмінний стан екрана, який малює UI;
- *  - [Intent] — дії користувача, що надходять з UI в [onIntent];
- *  - [Effect] — одноразові події (навігація, снекбар, фокус), які UI обробляє один раз.
- */
 abstract class MviViewModel<State, Intent, Effect>(initialState: State) : ViewModel() {
 
     private val _state = MutableStateFlow(initialState)
@@ -40,7 +34,6 @@ abstract class MviViewModel<State, Intent, Effect>(initialState: State) : ViewMo
     }
 }
 
-/** Збирає одноразові події ViewModel, поки екран у композиції. */
 @Composable
 fun <Effect> CollectEffects(effects: Flow<Effect>, onEffect: suspend (Effect) -> Unit) {
     val handler by rememberUpdatedState(onEffect)

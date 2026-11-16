@@ -50,21 +50,18 @@ import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
-/** Платформні залежності: екземпляр KSafe (на Android йому потрібен Context). */
 expect val platformModule: Module
 
 val dataModule = module {
     single { AppSettings() }
     singleOf(::OnboardingRepositoryImpl) bind OnboardingRepository::class
 
-    // Мережа та авторизація
     singleOf(::SessionEvents)
     singleOf(::KSafeTokenStorage) bind TokenStorage::class
     single { createHttpClient(tokenStorage = get(), sessionEvents = get()) }
     singleOf(::AuthApi)
     singleOf(::AuthRepositoryImpl) bind AuthRepository::class
 
-    // Маршрути
     singleOf(::RoutesRepositoryImpl) bind RoutesRepository::class
 }
 
@@ -74,7 +71,6 @@ val domainModule = module {
     factoryOf(::GetOnboardingPageUseCase)
     factoryOf(::SaveOnboardingPageUseCase)
 
-    // Валідація форм
     factoryOf(::ValidateUsernameUseCase)
     factoryOf(::ValidatePasswordUseCase)
     factoryOf(::ValidateNameUseCase)
@@ -84,7 +80,6 @@ val domainModule = module {
     factoryOf(::ValidatePeopleCountUseCase)
     factoryOf(::AuthValidators)
 
-    // Авторизація
     factoryOf(::LoginUseCase)
     factoryOf(::RegisterUseCase)
     factoryOf(::GetCurrentUserUseCase)
@@ -92,7 +87,6 @@ val domainModule = module {
     factoryOf(::LogoutUseCase)
     factoryOf(::ObserveSessionExpiredUseCase)
 
-    // Маршрути
     factoryOf(::GetRoutesUseCase)
     factoryOf(::GetRouteDetailsUseCase)
 }
@@ -108,18 +102,14 @@ val presentationModule = module {
 
 val appModules = listOf(platformModule, dataModule, domainModule, presentationModule)
 
-/**
- * Запуск Koin. Викликається один раз з точки входу кожної платформи
- * (Android — Application, Desktop/Web — main).
- */
+
 fun initKoin(appDeclaration: KoinAppDeclaration = {}) {
     AppLogger.init()
     val koin = startKoin {
         appDeclaration()
         modules(appModules)
     }.koin
-
-    // Застосовуємо збережену мову ще до першого кадру
+    
     val settings = koin.get<AppSettings>()
     settings.registerLaunch()
     customAppLocale = settings.appLanguage

@@ -49,10 +49,6 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import kotlin.math.absoluteValue
 
-/**
- * Точка входу екрана для навігації: бере ViewModel з Koin,
- * передає стан у UI та обробляє одноразові події.
- */
 @Composable
 fun OnboardingRoute(
     onNavigateToAuth: () -> Unit,
@@ -79,10 +75,6 @@ fun OnboardingRoute(
     )
 }
 
-/**
- * Екран знайомства з додатком на основі HorizontalPager.
- * Не містить логіки: лише відображає [state] і надсилає [OnboardingIntent].
- */
 @Composable
 fun OnboardingScreen(
     state: OnboardingState,
@@ -113,7 +105,6 @@ fun OnboardingScreen(
             )
         }
 
-        // Верхня панель: логотип, дії, "Пропустити"
         Row(
             modifier = Modifier
                 .align(Alignment.TopCenter)
@@ -136,7 +127,6 @@ fun OnboardingScreen(
             }
         }
 
-        // Нижня панель: індикатор + кнопка
         Row(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
@@ -177,11 +167,9 @@ private fun OnboardingPageContent(
     pageIndex: Int,
     pagerState: PagerState,
 ) {
-    // Відстань сторінки від центру: 0 — поточна, ±1 — сусідні
     val pageOffset = (pagerState.currentPage - pageIndex) + pagerState.currentPageOffsetFraction
 
     Box(Modifier.fillMaxSize()) {
-        // Фото з ефектом паралаксу
         Image(
             painter = painterResource(page.image),
             contentDescription = null,
@@ -195,7 +183,6 @@ private fun OnboardingPageContent(
                     scaleY = scale
                 },
         )
-        // Затемнення, щоб текст читався (як hero + gradient фону)
         Box(
             Modifier
                 .fillMaxSize()

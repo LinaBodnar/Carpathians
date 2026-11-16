@@ -76,7 +76,6 @@ fun HomeRoute(
     HomeScreen(state = state, onIntent = viewModel::onIntent, snackbarHostState = snackbarHostState)
 }
 
-/** Домашня сторінка авторизованого користувача. */
 @Composable
 fun HomeScreen(
     state: HomeState,

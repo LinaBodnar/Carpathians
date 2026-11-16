@@ -6,7 +6,6 @@ import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 
-/** Запити авторизації DummyJSON (https://dummyjson.com/docs/auth). */
 class AuthApi(private val client: HttpClient) {
 
     suspend fun login(username: String, password: String): LoginResponseDto =
@@ -26,10 +25,7 @@ class AuthApi(private val client: HttpClient) {
         const val ME_PATH = "auth/me"
         const val REGISTER_PATH = "users/add"
 
-        /**
-         * Короткий час життя access-токена (1 хв), щоб автоматичне оновлення
-         * через refresh-токен було видно під час роботи з застосунком.
-         */
+
         const val ACCESS_TOKEN_LIFETIME_MINUTES = 1
     }
 }

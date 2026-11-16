@@ -20,9 +20,6 @@ import com.bodnar.carpathians.ui.main.MainEffect
 import com.bodnar.carpathians.ui.main.MainViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
-/**
- * Кореневий екран. Koin має бути запущений до виклику (див. initKoin).
- */
 @Composable
 fun App(mainViewModel: MainViewModel = koinViewModel()) {
     val state by mainViewModel.state.collectAsStateWithLifecycle()
@@ -30,12 +27,9 @@ fun App(mainViewModel: MainViewModel = koinViewModel()) {
     CarpathiansTheme {
         CarpathiansBackground {
             val startRoute = state.startRoute ?: return@CarpathiansBackground
-            // Back stack і декоратори створюються поза AppEnvironment, щоб зміна мови
-            // (яка перебудовує UI) не скидала навігацію та стан екранів.
             val backStack: NavBackStack<NavKey> = rememberNavBackStack(navSavedStateConfiguration, startRoute)
             val viewModelDecorator = rememberAppViewModelDecorator()
 
-            // Сесія закінчилась (не вдалося оновити токени) — на екран входу
             CollectEffects(mainViewModel.effects) { effect ->
                 when (effect) {
                     MainEffect.NavigateToAuth -> if ((backStack.lastOrNull() as? Route)?.requiresAuth == true) {

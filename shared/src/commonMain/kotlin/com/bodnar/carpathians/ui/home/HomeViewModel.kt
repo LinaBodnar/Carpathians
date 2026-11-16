@@ -31,7 +31,6 @@ class HomeViewModel(
         }
     }
 
-    /** Захищений запит /auth/me: якщо access-токен прострочений, Ktor сам оновить його. */
     private fun loadUser() {
         if (currentState.isLoading) return
         setState { copy(isLoading = true) }

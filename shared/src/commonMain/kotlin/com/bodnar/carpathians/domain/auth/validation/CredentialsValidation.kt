@@ -1,6 +1,5 @@
 package com.bodnar.carpathians.domain.auth.validation
 
-/** Помилка валідації поля форми входу / реєстрації. */
 sealed interface ValidationError {
     data object Empty : ValidationError
     data class TooShort(val minLength: Int) : ValidationError
@@ -13,10 +12,6 @@ sealed interface ValidationError {
     data class OutOfRange(val min: Int, val max: Int) : ValidationError
 }
 
-/**
- * Ім'я користувача: не порожнє, щонайменше [MIN_LENGTH] символи,
- * лише латинські літери, цифри та . _ -
- */
 class ValidateUsernameUseCase {
     operator fun invoke(username: String): ValidationError? {
         val value = username.trim()
@@ -34,7 +29,6 @@ class ValidateUsernameUseCase {
     }
 }
 
-/** Пароль: не порожній, без пробілів, щонайменше [MIN_LENGTH] символів. */
 class ValidatePasswordUseCase {
     operator fun invoke(password: String): ValidationError? = when {
         password.isEmpty() -> ValidationError.Empty
@@ -48,7 +42,6 @@ class ValidatePasswordUseCase {
     }
 }
 
-/** Ім'я людини: не порожнє, щонайменше 2 символи, літери (будь-якої абетки), пробіл, апостроф, дефіс. */
 class ValidateNameUseCase {
     operator fun invoke(name: String): ValidationError? {
         val value = name.trim()
@@ -66,7 +59,6 @@ class ValidateNameUseCase {
     }
 }
 
-/** Email у форматі name@domain.tld */
 class ValidateEmailUseCase {
     operator fun invoke(email: String): ValidationError? {
         val value = email.trim()
@@ -82,7 +74,6 @@ class ValidateEmailUseCase {
     }
 }
 
-/** Повтор пароля має збігатися з паролем. */
 class ValidatePasswordConfirmationUseCase {
     operator fun invoke(password: String, confirmation: String): ValidationError? = when {
         confirmation.isEmpty() -> ValidationError.Empty
@@ -91,7 +82,6 @@ class ValidatePasswordConfirmationUseCase {
     }
 }
 
-/** Телефон: 10–13 цифр, можна з "+" на початку та пробілами / дужками / дефісами. */
 class ValidatePhoneUseCase {
     operator fun invoke(phone: String): ValidationError? {
         val value = phone.trim()
@@ -105,7 +95,6 @@ class ValidatePhoneUseCase {
     }
 }
 
-/** Кількість осіб у групі: ціле число від [MIN] до [MAX]. */
 class ValidatePeopleCountUseCase {
     operator fun invoke(count: String): ValidationError? {
         val value = count.trim()

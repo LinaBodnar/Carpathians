@@ -11,10 +11,6 @@ private data class StoredTokens(
     val refreshToken: String = "",
 )
 
-/**
- * Токени зберігаються через KSafe — зашифровано (AES-256-GCM).
- * Ключ шифрування живе в Android Keystore / сховищі ОС (Desktop) / WebCrypto (Web).
- */
 class KSafeTokenStorage(private val ksafe: KSafe) : TokenStorage {
 
     override suspend fun getTokens(): AuthTokens? {
@@ -42,5 +38,4 @@ class KSafeTokenStorage(private val ksafe: KSafe) : TokenStorage {
     }
 }
 
-/** У браузері KSafe розшифровує кеш асинхронно — перед читанням треба дочекатися. */
 internal expect suspend fun KSafe.awaitReady()

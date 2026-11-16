@@ -10,10 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 
-/**
- * Дизайн Carpathians — лише темний ("нічні гори"), тому тема має одну
- * темну колірну схему.
- */
 private val CarpathiansColorScheme = darkColorScheme(
     primary = CarpathiansColors.Primary,
     onPrimary = CarpathiansColors.White,
@@ -33,12 +29,10 @@ private val CarpathiansColorScheme = darkColorScheme(
     error = CarpathiansColors.Danger,
 )
 
-/** Фоновий градієнт сторінки: #1B2E2B -> #050A09. */
 val CarpathiansBackgroundBrush: Brush = Brush.verticalGradient(
     listOf(CarpathiansColors.BackgroundTop, CarpathiansColors.BackgroundBottom)
 )
 
-/** Градієнт кнопки "Вхід" (.btn-login-custom). */
 val CarpathiansButtonBrush: Brush = Brush.horizontalGradient(
     listOf(CarpathiansColors.PrimaryDark, CarpathiansColors.PrimaryDeep)
 )
@@ -53,7 +47,6 @@ fun CarpathiansTheme(content: @Composable () -> Unit) {
     )
 }
 
-/** Контейнер з фоновим градієнтом теми. */
 @Composable
 fun CarpathiansBackground(
     modifier: Modifier = Modifier,
